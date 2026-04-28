@@ -1,69 +1,56 @@
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-*.so.*
-
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
-
-# Build directories
+# =========================
+# VYRONIX / C++ Build Files
+# =========================
 build/
-Build/
-build-*/
-
-# CMake generated files
+cmake-build-*/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
-install_manifest.txt
-compile_commands.json
 
-# Temporary files
-*.tmp
+# Binaries
+*.exe
+*.out
+*.o
+*.obj
+*.bin
+
+# =========================
+# IDE / Editor Files
+# =========================
+.vscode/
+.idea/
+*.code-workspace
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Logs & Temp Files
+# =========================
 *.log
-*.bak
-*.swp
+*.tmp
+*.temp
 
-# vcpkg
-vcpkg_installed/
+# =========================
+# VYRONIX Specific (future-safe)
+# =========================
+*.vxc        # compiled VYRONIX cache
+*.vxmod      # module cache
+vyx-cache/   # compiler cache folder
 
-# debug information files
-*.dwo
+# =========================
+# Python (if using tools like verify.py)
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 
-# test output & cache
-Testing/
-.cache/
+# =========================
+# Local environment configs
+# =========================
+.env
