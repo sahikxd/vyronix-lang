@@ -5,6 +5,8 @@
 
 **VYRONIX** is a high-performance, systems-oriented programming language featuring a clean, indentation-based syntax and a powerful C++17-based compiler backend.
 
+## Author: Mohammad Mobassir Hoque (sahik) — VYRONIX Language Creator ❤
+
 ## 🚀 Features
 - **Clean Syntax**: Python-like indentation for blocks.
 - **High Performance**: Compiles to native code via C++17.
