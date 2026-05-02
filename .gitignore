@@ -1,56 +1,33 @@
-# =========================
-# VYRONIX / C++ Build Files
-# =========================
-build/
-cmake-build-*/
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
-Makefile
+# VYRONIX Language Git Ignore
 
 # Binaries
 *.exe
-*.out
-*.o
 *.obj
-*.bin
+*.o
+*.pdb
+*.ilk
+build/
+bin/
 
-# =========================
-# IDE / Editor Files
-# =========================
+# Temporary Files
+temp_out.cpp
+temp_exec.exe
+*.tmp
+*.log
+
+# Test files
+test.vx
+test1.vx
+test2.vx
+test3.vx
+ut
+
+# IDEs
 .vscode/
 .idea/
-*.code-workspace
+*.swp
+*.swo
 
-# =========================
-# OS Files
-# =========================
-.DS_Store
+# OS
 Thumbs.db
-
-# =========================
-# Logs & Temp Files
-# =========================
-*.log
-*.tmp
-*.temp
-
-# =========================
-# VYRONIX Specific (future-safe)
-# =========================
-*.vxc        # compiled VYRONIX cache
-*.vxmod      # module cache
-vyx-cache/   # compiler cache folder
-
-# =========================
-# Python (if using tools like verify.py)
-# =========================
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# =========================
-# Local environment configs
-# =========================
-.env
+.DS_Store
