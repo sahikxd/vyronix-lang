@@ -4,6 +4,10 @@
   "description": "Professional support for the VYRONIX programming language",
   "version": "1.0.0",
   "publisher": "vyronix-engineering",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sahikxd/vyronix-lang-extention.git"
+  },
   "icon": "logo.png",
   "engines": {
     "vscode": "^1.75.0"
