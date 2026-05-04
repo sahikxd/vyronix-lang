@@ -1,4 +1,0 @@
-let x = 10 + 20 * 5
-echo "Hello Vyronix"
-let name = "Rahim"
-echo name

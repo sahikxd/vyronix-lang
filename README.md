@@ -1,53 +1,113 @@
-# VYRONIX Programming Language
+# ⚡ VYRONIX Programming Language
 
-**VYRONIX** is a high-performance, async-first programming language built with C++17. It features Python-like indentation, a cooperative task scheduler, and a hybrid mark-and-sweep garbage collector.
+**VYRONIX** is a high-performance, async-first programming language designed for speed, safety, and simplicity. Built on a custom C++17 engine, it features Python-like indentation, a cooperative task scheduler, and automated memory management.
 
 ![Logo](logo.png)
 
-## 🚀 Key Features
+## ✨ Key Features
 
-- **Async/Spawn Native**: Built-in keywords for concurrency (`spawn`, `await`).
-- **Memory Safety**: Automated GC and ownership tracking (Move/Free semantics).
-- **Fast Execution**: Stack-based IR VM with optimized opcodes.
-- **Easy Syntax**: Indentation-based blocks, no semi-colons required.
-- **Portable**: Run directly via `vyx.exe` or compile to native C++.
+- **🚀 Async-First Architecture**: Native support for concurrency with `spawn` and `await` keywords.
+- **🛡️ Memory Safety**: Automated Hybrid Mark-and-Sweep Garbage Collector + Ownership tracking.
+- **🐍 Clean Syntax**: Indentation-based blocks for highly readable and maintainable code.
+- **🛠️ Stack-Based VM**: Optimized IR (Intermediate Representation) execution for low-latency performance.
+- **🧩 VS Code Integration**: Official extension with syntax highlighting and an integrated "Run" button.
+
+---
 
 ## 📥 Installation
 
-1. **Download**: Clone or download this repository.
-2. **Environment**: Add the folder containing `vyx.exe` to your System PATH.
-3. **Dependencies**: (Windows) Ensure the included DLLs are in the same folder as `vyx.exe`.
+### **Windows (Recommended)**
+1. **Download**: Download the latest release zip from GitHub.
+2. **Extract**: Unzip the folder to a permanent location (e.g., `C:\vyronix`).
+3. **Environment Variables**:
+   - Open **Start Menu**, search for "Environment Variables".
+   - Under **System Variables**, find `Path` and click **Edit**.
+   - Click **New** and add the path to your extracted `vyronix` folder.
+4. **Verify**: Open a new terminal and type:
+   ```bash
+   vyx version
+   ```
 
-## � Usage
+### **Linux / macOS**
+- Ensure `libcurl` is installed on your system.
+- Add the directory to your shell path in `.bashrc` or `.zshrc`.
 
-### Run a Script
+---
+
+## 🧩 VS Code Setup (Highly Recommended)
+
+For the best development experience, install the VYRONIX Extension:
+
+1. Download **`vyronix-1.0.0.vsix`** from the `vscode-extension/` folder.
+2. Open VS Code, go to the **Extensions** tab (`Ctrl+Shift+X`).
+3. Click the `...` menu (top right) -> **Install from VSIX...**
+4. Select the downloaded file.
+
+---
+
+## 🛠️ Usage & Commands
+
+### **Run a Script**
+Execute any `.vx` file directly:
 ```bash
 vyx run examples/01_hello.vx
 ```
 
-### Interactive REPL
+### **Interactive REPL**
+Test code line-by-line in the interactive shell:
 ```bash
 vyx repl
 ```
 
-### Check for Errors
+### **Semantic Check**
+Validate your code for errors without executing it:
 ```bash
 vyx check your_file.vx
 ```
 
-## 🧩 VS Code Support
-Download and install our official extension for Syntax Highlighting and a one-click Run button:
-[VYRONIX VS Code Extension](https://github.com/sahikxd/vyronix-lang-extention)
+---
 
-## � Quick Example
+## 📖 Language at a Glance
+
+### **Variables & Arithmetic**
 ```python
-# Simple greeting function
-unit greet(name):
-    echo "Hello, " + name
+let x = 10
+let message = "Result: "
+set x = x + 5
+echo message + x  # Output: Result: 15
+```
 
-let user = ask "Enter name: "
-greet(user)
+### **Functions & Logic**
+```python
+unit check_score(val):
+    when val >= 80:
+        give "Pass"
+    otherwise:
+        give "Fail"
+
+let result = check_score(85)
+echo "Status: " + result
+```
+
+### **Async Concurrency**
+```python
+unit heavy_task(id):
+    echo "Task " + id + " started"
+    # Logic here...
+    give "Done"
+
+let t1 = spawn heavy_task(1)
+echo await t1
 ```
 
 ---
-Developed by **sahikxd** | [Report Issues](https://github.com/sahikxd/vyronix-lang/issues)
+
+## 📂 Project Structure
+
+- `vyx.exe`: The core execution engine.
+- `stdlib/`: Built-in libraries for IO, Math, Net, and more.
+- `examples/`: Curated scripts to help you get started.
+- `vscode-extension/`: Official VSIX package for IDE support.
+
+---
+**Developed by [sahikxd](https://github.com/sahikxd)** | [Report a Bug](https://github.com/sahikxd/vyronix-lang/issues)
