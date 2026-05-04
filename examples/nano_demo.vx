@@ -1,0 +1,10 @@
+import time
+import ui
+
+let start = time.nano()
+# Do something small
+let x = 1 + 1
+let end = time.nano()
+
+let diff = end - start
+ui.popup("Benchmark", "Operation took: " + int_to_str(diff) + " nanoseconds")

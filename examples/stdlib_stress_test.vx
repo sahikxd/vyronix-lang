@@ -1,0 +1,66 @@
+# VYRONIX Standard Library Stress Test
+
+import "stdlib/math.vx" as math
+import "stdlib/io.vx" as io
+import "stdlib/string.vx" as str
+import "stdlib/fs.vx" as fs
+import "stdlib/os.vx" as os
+import "stdlib/net.vx" as net
+import "stdlib/time.vx" as time
+
+println("--- Starting VYRONIX Stdlib Stress Test ---")
+
+# 1. Math Test
+println("Testing Math...")
+println("sqrt(16) = " + float_to_str(math.sqrt(16.0)))
+println("pow(2, 3) = " + float_to_str(math.pow(2.0, 3.0)))
+println("abs(-42) = " + float_to_str(math.abs(-42.0)))
+println("sin(0) = " + float_to_str(math.sin(0.0)))
+println("rand() = " + float_to_str(math.rand()))
+println("rand_int(1, 100) = " + int_to_str(math.rand_int(1, 100)))
+
+# 2. String Test
+println("Testing String...")
+let s = "VYRONIX,is,awesome"
+println("Original: " + s)
+println("Length: " + int_to_str(len(s)))
+if str_contains(s, "is"):
+    println("Contains 'is': yes")
+otherwise:
+    println("Contains 'is': no")
+
+# 3. FS Test
+println("Testing FS...")
+let testFile = "test_stdlib.tmp"
+fs_write(testFile, "Hello from VYRONIX Stress Test!")
+when fs_exists(testFile):
+    println("File created successfully.")
+    let content = fs_read(testFile)
+    println("Read content: " + content)
+    fs_append(testFile, "\nAppended line.")
+    println("After append: " + fs_read(testFile))
+otherwise:
+    println("FS Error: File not found.")
+
+# 4. OS Test
+println("Testing OS...")
+println("OS: " + os_getenv("OS"))
+# os_system("echo 'System call works'") # Commented out to avoid clutter
+
+# 5. Net Test
+println("Testing Net (requires libcurl)...")
+# Using a simple URL for testing
+let response = net.http_get("http://www.google.com")
+println("Response length: " + int_to_str(len(response)))
+# println("Response preview: " + str_join(str_split(response, " "), " "))
+
+# 6. Time Test
+println("Testing Time...")
+let t1 = time_now()
+println("Time now: " + int_to_str(t1))
+println("Sleeping for 500ms...")
+time_sleep(500)
+let t2 = time_now()
+println("Time after sleep: " + int_to_str(t2))
+
+println("--- Stress Test Completed ---")

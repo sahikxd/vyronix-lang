@@ -1,0 +1,39 @@
+{
+    "scopeName": "source.vx",
+    "patterns": [
+        {
+            "name": "keyword.control.vyronix",
+            "match": "\\b(when|elif|otherwise|loop|while|try|catch|finally|raise|panic|import|from|as|unit|give)\\b"
+        },
+        {
+            "name": "keyword.declaration.vyronix",
+            "match": "\\b(let|set|drop|class|spawn|async|await|alloc|free|copy|move)\\b"
+        },
+        {
+            "name": "storage.type.vyronix",
+            "match": "\\b(int|float|str|bool|void|ptr|byte|list|map)\\b"
+        },
+        {
+            "name": "constant.language.vyronix",
+            "match": "\\b(yes|no|null|self)\\b"
+        },
+        {
+            "name": "support.function.vyronix",
+            "match": "\\b(echo|ask|init|new)\\b"
+        },
+        {
+            "name": "string.quoted.double.vyronix",
+            "begin": "\"",
+            "end": "\"",
+            "patterns": [{ "name": "constant.character.escape.vyronix", "match": "\\\\." }]
+        },
+        {
+            "name": "comment.line.vyronix",
+            "match": "#.*$"
+        },
+        {
+            "name": "constant.numeric.vyronix",
+            "match": "\\b[0-9]+(\\.[0-9]+)?\\b"
+        }
+    ]
+}

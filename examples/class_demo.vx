@@ -1,0 +1,14 @@
+# VYRONIX Class Example
+
+class Player:
+    init(name: str, health: int):
+        set self.name = name
+        set self.health = health
+    
+    unit takeDamage(amount: int):
+        set self.health = self.health - amount
+        echo self.name + " took damage!"
+
+let p = new Player("Hero", 100)
+p.takeDamage(20)
+echo p.health

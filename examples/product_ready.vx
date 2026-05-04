@@ -1,0 +1,42 @@
+import fs
+import string
+import math
+import time
+import os
+import net
+
+# 1. FS Test
+let data = "Hello VYRONIX Product Ready!"
+fs.write_file("test.txt", data)
+when fs.exists("test.txt"):
+    let read = fs.read_file("test.txt")
+    echo "Read from file: " + read
+
+# 2. String Test
+let s = "apple,banana,cherry"
+let parts = string.split(s, ",")
+echo "Joined again: " + string.join(parts, " | ")
+echo "Contains 'banana': " + bool_to_str(string.contains(s, "banana"))
+
+# 3. Math Test
+echo "Sqrt(16): " + float_to_str(math.sqrt(16.0))
+echo "2^10: " + float_to_str(math.pow(2.0, 10.0))
+echo "Random (0-100): " + int_to_str(math.rand_int(0, 100))
+
+# 4. Time & OS Test
+echo "Current Time: " + int_to_str(time.now())
+echo "Sleeping for 100ms..."
+time.sleep(100)
+echo "System OS Name: " + os.getenv("OS")
+
+# 5. Net Test
+let response = net.http_get("https://vyronix-lang.org")
+echo "Net Response: " + response
+
+echo "--- PRODUCT READY TEST COMPLETE ---"
+
+unit bool_to_str(b: bool): str
+    when b:
+        give "yes"
+    otherwise:
+        give "no"

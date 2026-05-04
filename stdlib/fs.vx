@@ -1,0 +1,15 @@
+# VYRONIX File System Module
+
+unit read_file(path: str): str
+    give fs_read(path)
+
+unit write_file(path: str, content: str): void
+    fs_write(path, content)
+    give null
+
+unit append_file(path: str, content: str): void
+    fs_append(path, content)
+    give null
+
+unit exists(path: str): bool
+    give fs_exists(path)

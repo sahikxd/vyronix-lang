@@ -1,0 +1,3 @@
+echo "Hello from VYRONIX!"
+let name = ask "What is your name? "
+echo "Welcome to the language, " + name

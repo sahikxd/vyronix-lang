@@ -1,0 +1,7 @@
+# VYRONIX OS Module
+
+unit system(cmd: str): int
+    give os_system(cmd)
+
+unit getenv(name: str): str
+    give os_getenv(name)

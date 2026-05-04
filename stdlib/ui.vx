@@ -1,0 +1,9 @@
+# VYRONIX UI Module
+
+unit popup(title: str, message: str): void
+    ui_popup(title, message)
+    give null
+
+unit alert(message: str): void
+    ui_popup("Alert", message)
+    give null

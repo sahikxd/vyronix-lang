@@ -1,0 +1,6 @@
+let x = 10
+let y = 20.5
+let message = "Total is: "
+
+set x = 15
+echo message + (x + y)

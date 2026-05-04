@@ -1,0 +1,6 @@
+let count = 1
+while count <= 5:
+    echo "Count: " + count
+    set count = count + 1
+
+echo "Loop finished!"

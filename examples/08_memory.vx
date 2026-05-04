@@ -1,0 +1,13 @@
+alloc myPtr 1024
+echo "Memory allocated."
+
+copy myPtr secondPtr
+echo "Pointer copied."
+
+move secondPtr thirdPtr
+echo "Pointer moved. secondPtr is now invalid."
+
+# free secondPtr # This would cause a semantic error
+
+free thirdPtr
+echo "Memory freed."

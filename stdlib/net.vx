@@ -1,0 +1,4 @@
+# VYRONIX Network Module
+
+unit http_get(url: str): str
+    give net_http_get(url)

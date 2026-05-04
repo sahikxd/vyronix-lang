@@ -1,0 +1,13 @@
+# VYRONIX String Module
+
+unit length(s: str): int
+    give len(s)
+
+unit split(s: str, delim: str): list
+    give str_split(s, delim)
+
+unit join(parts: list, delim: str): str
+    give str_join(parts, delim)
+
+unit contains(s: str, sub: str): bool
+    give str_contains(s, sub)

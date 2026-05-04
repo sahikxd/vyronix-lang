@@ -1,0 +1,7 @@
+unit greet(name, age):
+    echo "Hello " + name
+    echo "You are " + age + " years old."
+    give age * 2
+
+let result = greet("Alice", 25)
+echo "Double age is: " + result

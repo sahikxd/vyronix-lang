@@ -1,0 +1,22 @@
+# VYRONIX Math Module
+
+unit sqrt(x: float): float
+    give sqrt(x)
+
+unit pow(x: float, y: float): float
+    give pow(x, y)
+
+unit rand(): float
+    give rand()
+
+unit rand_int(min: int, max: int): int
+    give rand_int(min, max)
+
+unit abs(x: float): float
+    give abs(x)
+
+unit sin(x: float): float
+    give sin(x)
+
+unit cos(x: float): float
+    give cos(x)

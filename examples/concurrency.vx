@@ -1,0 +1,15 @@
+# VYRONIX Concurrency Example
+
+async unit downloadFile(url: str): str
+    echo "Downloading from " + url
+    # Simulate work
+    give "File content from " + url
+
+let task1 = spawn downloadFile("https://vyronix.org/api")
+let task2 = spawn downloadFile("https://google.com")
+
+let result1 = await task1
+let result2 = await task2
+
+echo result1
+echo result2

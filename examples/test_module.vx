@@ -1,0 +1,7 @@
+from io import print, info
+
+print("Testing module system...")
+info("Module loaded successfully!")
+
+let x = 10
+print("X is " + x)
