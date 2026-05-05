@@ -1,8 +1,0 @@
-let score = 85
-
-when score >= 90:
-    echo "Grade: A"
-elif score >= 80:
-    echo "Grade: B"
-otherwise:
-    echo "Grade: C"
