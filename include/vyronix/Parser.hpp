@@ -34,6 +34,7 @@ private:
     [[nodiscard]] std::unique_ptr<Stmt> functionDeclaration();
     [[nodiscard]] std::unique_ptr<Stmt> procDeclaration();
     [[nodiscard]] std::unique_ptr<Stmt> structDeclaration();
+    [[nodiscard]] std::unique_ptr<Stmt> classDeclaration();
     [[nodiscard]] std::unique_ptr<Stmt> enumDeclaration();
     [[nodiscard]] std::unique_ptr<Stmt> importDeclaration();
     

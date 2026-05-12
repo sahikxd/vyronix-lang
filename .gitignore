@@ -54,6 +54,8 @@ __pycache__/
 # Temporary
 *.tmp
 *.bak
+*.nsi.bak
+*.rc.bak
 *.orig
 *.rej
 st5MQVps

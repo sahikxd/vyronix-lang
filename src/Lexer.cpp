@@ -25,6 +25,8 @@ const std::unordered_map<std::string, TokenType> Lexer::keywords_ = {
     {"throw", TokenType::THROW},
     {"struct", TokenType::STRUCT},
     {"enum", TokenType::ENUM},
+    {"class", TokenType::CLASS},
+    {"extends", TokenType::EXTENDS},
     {"import", TokenType::IMPORT},
     {"use", TokenType::USE},
     {"module", TokenType::MODULE},

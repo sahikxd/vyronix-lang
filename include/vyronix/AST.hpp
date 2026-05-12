@@ -48,6 +48,7 @@ class ReturnStmt;
 class BreakStmt;
 class ContinueStmt;
 class StructStmt;
+class ClassStmt;
 class EnumStmt;
 class ImportStmt;
 class InvalidStmt;
@@ -130,6 +131,7 @@ public:
     virtual void visitBreakStmt(BreakStmt& stmt) = 0;
     virtual void visitContinueStmt(ContinueStmt& stmt) = 0;
     virtual void visitStructStmt(StructStmt& stmt) = 0;
+    virtual void visitClassStmt(ClassStmt& stmt) = 0;
     virtual void visitEnumStmt(EnumStmt& stmt) = 0;
     virtual void visitImportStmt(ImportStmt& stmt) = 0;
     virtual void visitInvalidStmt(InvalidStmt& stmt) = 0;
@@ -661,6 +663,32 @@ public:
         std::vector<Parameter> fs;
         for (const auto& f : fields) fs.push_back(f.clone());
         return std::make_unique<StructStmt>(name, std::move(fs), type_params);
+    }
+};
+
+class ClassStmt : public Stmt {
+public:
+    Token name;
+    std::optional<Token> superclass;
+    std::vector<std::unique_ptr<VarStmt>> fields;
+    std::vector<std::unique_ptr<FunctionStmt>> methods;
+    
+    ClassStmt(Token name, std::optional<Token> superclass, 
+              std::vector<std::unique_ptr<VarStmt>> fields,
+              std::vector<std::unique_ptr<FunctionStmt>> methods)
+        : name(std::move(name)), superclass(std::move(superclass)), 
+          fields(std::move(fields)), methods(std::move(methods)) {}
+          
+    void accept(ASTVisitor& visitor) override { visitor.visitClassStmt(*this); }
+    
+    std::unique_ptr<Stmt> clone() const override {
+        std::vector<std::unique_ptr<VarStmt>> fs;
+        for (const auto& f : fields) if (f) fs.push_back(std::unique_ptr<VarStmt>(static_cast<VarStmt*>(f->clone().release())));
+        
+        std::vector<std::unique_ptr<FunctionStmt>> ms;
+        for (const auto& m : methods) if (m) ms.push_back(std::unique_ptr<FunctionStmt>(static_cast<FunctionStmt*>(m->clone().release())));
+        
+        return std::make_unique<ClassStmt>(name, superclass, std::move(fs), std::move(ms));
     }
 };
 

@@ -40,6 +40,25 @@ void IRGenerator::collectFunctions(const std::vector<std::unique_ptr<Stmt>>& sta
             }
             if (proc->body) proc->body->accept(*this);
             emit(OpCode::RETURN);
+        } else if (auto cls = dynamic_cast<ClassStmt*>(stmt.get())) {
+            class_names_.push_back(cls->name.lexeme);
+            for (const auto& method : cls->methods) {
+                if (!method) continue;
+                std::string full_name = cls->name.lexeme + "." + method->name.lexeme;
+                function_labels_[full_name] = code_.size();
+                
+                // Methods have 'self' as implicit first argument (pushed by INVOKE)
+                emit(OpCode::STORE_VAR, "self");
+                emit(OpCode::POP);
+                
+                for (auto it = method->params.rbegin(); it != method->params.rend(); ++it) {
+                    emit(OpCode::STORE_VAR, it->name.lexeme);
+                    emit(OpCode::POP);
+                }
+                if (method->body) method->body->accept(*this);
+                emit(OpCode::PUSH_CONST, std::monostate{});
+                emit(OpCode::RETURN);
+            }
         } else if (auto block = dynamic_cast<BlockStmt*>(stmt.get())) {
             collectFunctions(block->statements);
         }
@@ -213,11 +232,25 @@ void IRGenerator::visitLogicalExpr(LogicalExpr& expr) {
 }
 
 void IRGenerator::visitStructInstanceExpr(StructInstanceExpr& expr) {
-    for (const auto& init : expr.initializers) {
-        if (init.second) init.second->accept(*this);
-        emit(OpCode::PUSH_CONST, init.first.lexeme);
+    bool is_class = std::find(class_names_.begin(), class_names_.end(), expr.struct_name.lexeme) != class_names_.end();
+    
+    if (is_class) {
+        emit(OpCode::NEW_INSTANCE, expr.struct_name.lexeme);
+        // Fields are set after instantiation
+        for (auto& init : expr.initializers) {
+            emit(OpCode::DUP); // Duplicate instance for SET_FIELD
+            if (init.second) init.second->accept(*this);
+            emit(OpCode::SET_FIELD, init.first.lexeme);
+            emit(OpCode::POP); // Pop value returned by SET_FIELD
+        }
+    } else {
+        for (auto& init : expr.initializers) {
+            if (init.second) init.second->accept(*this);
+            emit(OpCode::PUSH_CONST, init.first.lexeme);
+        }
+        emit(OpCode::NEW_STRUCT, (int64_t)expr.initializers.size());
     }
-    emit(OpCode::NEW_STRUCT, (int64_t)expr.initializers.size());
+}
 }
 
 void IRGenerator::visitGetFieldExpr(GetFieldExpr& expr) {
@@ -418,6 +451,14 @@ void IRGenerator::visitReturnStmt(ReturnStmt& stmt) {
 
 void IRGenerator::visitBreakStmt(BreakStmt& stmt) { (void)stmt; /* TODO: break logic */ }
 void IRGenerator::visitContinueStmt(ContinueStmt& stmt) { (void)stmt; /* TODO: continue logic */ }
+
+void IRGenerator::visitClassStmt(ClassStmt& stmt) {
+    // Emit the class definition
+    // For inheritance, we can pass the superclass name as the operand
+    std::string superclass = stmt.superclass ? stmt.superclass->lexeme : "";
+    emit(OpCode::CLASS_DEF, stmt.name.lexeme + ":" + superclass);
+}
+
 void IRGenerator::visitStructStmt(StructStmt& stmt) { (void)stmt; }
 void IRGenerator::visitEnumStmt(EnumStmt& stmt) {
     for (size_t i = 0; i < stmt.members.size(); ++i) {

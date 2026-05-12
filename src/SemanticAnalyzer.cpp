@@ -307,23 +307,41 @@ void SemanticAnalyzer::visitLogicalExpr(LogicalExpr& expr) {
 }
 
 void SemanticAnalyzer::visitStructInstanceExpr(StructInstanceExpr& expr) {
-    auto it = structs_.find(expr.struct_name.lexeme);
-    if (it == structs_.end()) {
-        error(expr.struct_name, "Undefined struct '" + expr.struct_name.lexeme + "'.");
+    auto s_it = structs_.find(expr.struct_name.lexeme);
+    auto c_it = classes_.find(expr.struct_name.lexeme);
+    
+    if (s_it == structs_.end() && c_it == classes_.end()) {
+        error(expr.struct_name, "Undefined struct or class '" + expr.struct_name.lexeme + "'.");
         current_expr_type_ = std::make_unique<Type>(Type::Kind::BASE, "any");
         return;
     }
     
-    // Check fields
-    const auto& s_info = it->second;
-    for (auto& init : expr.initializers) {
-        auto f_it = s_info.fields.find(init.first.lexeme);
-        if (f_it == s_info.fields.end()) {
-            error(init.first, "Struct '" + expr.struct_name.lexeme + "' has no field '" + init.first.lexeme + "'.");
-        } else if (init.second) {
-            init.second->accept(*this);
-            if (current_expr_type_ && !checkTypes(*f_it->second, *current_expr_type_)) {
-                error(init.first, "Type mismatch for field '" + init.first.lexeme + "'.");
+    if (s_it != structs_.end()) {
+        // Check fields for struct
+        const auto& s_info = s_it->second;
+        for (auto& init : expr.initializers) {
+            auto f_it = s_info.fields.find(init.first.lexeme);
+            if (f_it == s_info.fields.end()) {
+                error(init.first, "Struct '" + expr.struct_name.lexeme + "' has no field '" + init.first.lexeme + "'.");
+            } else if (init.second) {
+                init.second->accept(*this);
+                if (current_expr_type_ && !checkTypes(*f_it->second, *current_expr_type_)) {
+                    error(init.first, "Type mismatch for field '" + init.first.lexeme + "'.");
+                }
+            }
+        }
+    } else {
+        // Check fields for class
+        const auto& c_info = c_it->second;
+        for (auto& init : expr.initializers) {
+            auto f_it = c_info.fields.find(init.first.lexeme);
+            if (f_it == c_info.fields.end()) {
+                error(init.first, "Class '" + expr.struct_name.lexeme + "' has no field '" + init.first.lexeme + "'.");
+            } else if (init.second) {
+                init.second->accept(*this);
+                if (current_expr_type_ && !checkTypes(*f_it->second, *current_expr_type_)) {
+                    error(init.first, "Type mismatch for field '" + init.first.lexeme + "'.");
+                }
             }
         }
     }
@@ -341,8 +359,6 @@ void SemanticAnalyzer::visitGetFieldExpr(GetFieldExpr& expr) {
         if (ns == "io" || ns == "fs" || ns == "str" || ns == "arr" || ns == "math" || ns == "sys" || ns == "weak") {
             std::string full_name = ns + "." + expr.name.lexeme;
             if (NativeRegistry::getInstance().exists(full_name)) {
-                // It's a namespaced native function
-                // We'll treat this as a special type for now or just allow it
                 current_expr_type_ = std::make_unique<Type>(Type::Kind::BASE, "any");
                 return;
             }
@@ -350,15 +366,40 @@ void SemanticAnalyzer::visitGetFieldExpr(GetFieldExpr& expr) {
     }
     
     if (obj_type && obj_type->kind == Type::Kind::CUSTOM) {
-        auto it = structs_.find(obj_type->name);
-        if (it != structs_.end()) {
-            auto f_it = it->second.fields.find(expr.name.lexeme);
-            if (f_it != it->second.fields.end()) {
+        auto s_it = structs_.find(obj_type->name);
+        if (s_it != structs_.end()) {
+            auto f_it = s_it->second.fields.find(expr.name.lexeme);
+            if (f_it != s_it->second.fields.end()) {
                 current_expr_type_ = f_it->second->clone();
                 return;
             }
-            error(expr.name, "Struct '" + obj_type->name + "' has no field '" + expr.name.lexeme + "'.");
         }
+        
+        auto c_it = classes_.find(obj_type->name);
+        if (c_it != classes_.end()) {
+            // Search fields and methods in class hierarchy
+            auto curr_name = obj_type->name;
+            while (true) {
+                auto it = classes_.find(curr_name);
+                if (it == classes_.end()) break;
+                
+                if (it->second.fields.count(expr.name.lexeme)) {
+                    current_expr_type_ = it->second.fields[expr.name.lexeme]->clone();
+                    return;
+                }
+                if (it->second.methods.count(expr.name.lexeme)) {
+                    current_expr_type_ = std::make_unique<Type>(Type::Kind::BASE, "any");
+                    return;
+                }
+                
+                if (it->second.superclass) {
+                    curr_name = it->second.superclass.value();
+                } else {
+                    break;
+                }
+            }
+        }
+        error(expr.name, "Member '" + expr.name.lexeme + "' not found in '" + obj_type->name + "'.");
     }
     
     current_expr_type_ = std::make_unique<Type>(Type::Kind::BASE, "any");
@@ -372,10 +413,10 @@ void SemanticAnalyzer::visitSetFieldExpr(SetFieldExpr& expr) {
     auto val_type = std::move(current_expr_type_);
     
     if (obj_type && obj_type->kind == Type::Kind::CUSTOM) {
-        auto it = structs_.find(obj_type->name);
-        if (it != structs_.end()) {
-            auto f_it = it->second.fields.find(expr.name.lexeme);
-            if (f_it != it->second.fields.end()) {
+        auto s_it = structs_.find(obj_type->name);
+        if (s_it != structs_.end()) {
+            auto f_it = s_it->second.fields.find(expr.name.lexeme);
+            if (f_it != s_it->second.fields.end()) {
                 if (val_type && !checkTypes(*f_it->second, *val_type)) {
                     error(expr.name, "Type mismatch in field assignment.");
                 }
@@ -383,6 +424,30 @@ void SemanticAnalyzer::visitSetFieldExpr(SetFieldExpr& expr) {
                 return;
             }
         }
+        
+        auto c_it = classes_.find(obj_type->name);
+        if (c_it != classes_.end()) {
+            auto curr_name = obj_type->name;
+            while (true) {
+                auto it = classes_.find(curr_name);
+                if (it == classes_.end()) break;
+                
+                if (it->second.fields.count(expr.name.lexeme)) {
+                    if (val_type && !checkTypes(*it->second.fields[expr.name.lexeme], *val_type)) {
+                        error(expr.name, "Type mismatch in field assignment.");
+                    }
+                    current_expr_type_ = it->second.fields[expr.name.lexeme]->clone();
+                    return;
+                }
+                
+                if (it->second.superclass) {
+                    curr_name = it->second.superclass.value();
+                } else {
+                    break;
+                }
+            }
+        }
+        error(expr.name, "Field '" + expr.name.lexeme + "' not found in '" + obj_type->name + "'.");
     }
     
     current_expr_type_ = std::make_unique<Type>(Type::Kind::BASE, "any");
@@ -672,6 +737,49 @@ void SemanticAnalyzer::visitReturnStmt(ReturnStmt& stmt) {
 
 void SemanticAnalyzer::visitBreakStmt(BreakStmt& stmt) { (void)stmt; }
 void SemanticAnalyzer::visitContinueStmt(ContinueStmt& stmt) { (void)stmt; }
+
+void SemanticAnalyzer::visitClassStmt(ClassStmt& stmt) {
+    SymbolInfo info;
+    info.type = std::make_unique<Type>(Type::Kind::CUSTOM, stmt.name.lexeme);
+    declare(stmt.name, std::move(info));
+
+    ClassInfo c_info;
+    if (stmt.superclass) {
+        c_info.superclass = stmt.superclass->lexeme;
+        // Verify superclass exists
+        if (classes_.find(c_info.superclass.value()) == classes_.end()) {
+            error(stmt.superclass.value(), "Superclass '" + c_info.superclass.value() + "' not found.");
+        }
+    }
+
+    beginScope();
+    // Inject 'self'
+    SymbolInfo self_info;
+    self_info.type = std::make_unique<Type>(Type::Kind::CUSTOM, stmt.name.lexeme);
+    self_info.is_const = true;
+    scopes_.back()["self"] = std::move(self_info);
+
+    for (const auto& field : stmt.fields) {
+        if (field) field->accept(*this);
+        if (field) c_info.fields[field->name.lexeme] = field->type ? field->type->clone() : std::make_unique<Type>(Type::Kind::BASE, "any");
+    }
+
+    for (const auto& method : stmt.methods) {
+        if (method) method->accept(*this);
+        if (method) {
+            SymbolInfo m_info;
+            m_info.is_function = true;
+            m_info.return_type = method->return_type ? method->return_type->clone() : std::make_unique<Type>(Type::Kind::BASE, "void");
+            for (const auto& p : method->params) {
+                m_info.param_types.push_back(p.type ? p.type->clone() : std::make_unique<Type>(Type::Kind::BASE, "any"));
+            }
+            c_info.methods[method->name.lexeme] = std::move(m_info);
+        }
+    }
+
+    endScope();
+    classes_[stmt.name.lexeme] = std::move(c_info);
+}
 
 void SemanticAnalyzer::visitStructStmt(StructStmt& stmt) {
     SymbolInfo info;

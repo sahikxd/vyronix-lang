@@ -60,6 +60,8 @@ private:
     std::vector<std::shared_ptr<StructInstance>> all_structs_;
     std::vector<std::shared_ptr<ArrayInstance>> all_arrays_;
     std::vector<std::shared_ptr<Closure>> all_closures_;
+    std::vector<std::shared_ptr<ClassInstance>> all_class_instances_;
+    std::vector<std::shared_ptr<ClassDefinition>> all_class_definitions_;
     size_t call_depth_ = 0;
     const size_t max_call_depth_ = 500; // Prevent host stack overflow
 

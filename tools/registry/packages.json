@@ -1,18 +1,16 @@
 {
-  "version": "1.0",
-  "registry": "https://sahikxd.github.io/registry",
+  "registry": "VYRONIX Package Registry",
+  "maintainer": "sahikxd",
+  "version": "1.0.0",
   "packages": {
     "http": {
-      "repo": "github.com/sahikxd/http-vx",
-      "description": "HTTP client/server for VYRONIX",
-      "latest": "v1.0.0",
-      "versions": ["v1.0.0"]
-    },
-    "json": {
-      "repo": "github.com/sahikxd/json-vx",
-      "description": "JSON parse/stringify library",
-      "latest": "v0.1.0",
-      "versions": ["v0.1.0"]
+      "name": "http",
+      "version": "1.0.0",
+      "description": "HTTP client library for VYRONIX",
+      "repository": "https://github.com/sahikxd/vyronix-http",
+      "author": "sahikxd",
+      "main": "http.vx",
+      "license": "MIT"
     }
   }
 }

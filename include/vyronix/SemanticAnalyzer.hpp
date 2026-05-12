@@ -119,11 +119,18 @@ private:
         std::unordered_map<std::string, std::unique_ptr<Type>> fields;
     };
 
+    struct ClassInfo {
+        std::optional<std::string> superclass;
+        std::unordered_map<std::string, std::unique_ptr<Type>> fields;
+        std::unordered_map<std::string, SymbolInfo> methods;
+    };
+
     struct EnumInfo {
         std::unordered_map<std::string, int> members;
     };
 
     std::unordered_map<std::string, StructInfo> structs_;
+    std::unordered_map<std::string, ClassInfo> classes_;
     std::unordered_map<std::string, EnumInfo> enums_;
     std::vector<std::unordered_map<std::string, SymbolInfo>> scopes_;
     std::string filename_;

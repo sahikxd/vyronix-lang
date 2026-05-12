@@ -48,6 +48,7 @@ public:
     void visitBreakStmt(BreakStmt& stmt) override;
     void visitContinueStmt(ContinueStmt& stmt) override;
     void visitStructStmt(StructStmt& stmt) override;
+    void visitClassStmt(ClassStmt& stmt) override;
     void visitEnumStmt(EnumStmt& stmt) override;
     void visitImportStmt(ImportStmt& stmt) override;
     void visitInvalidStmt(InvalidStmt& stmt) override;
@@ -56,6 +57,7 @@ private:
     std::vector<Instruction> code_;
     std::unordered_map<std::string, size_t> function_labels_;
     std::vector<ClosureExpr*> closure_stack_;
+    std::vector<std::string> class_names_;
 
     void collectFunctions(const std::vector<std::unique_ptr<Stmt>>& statements);
     [[nodiscard]] int emitJump(OpCode op);

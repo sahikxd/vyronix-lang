@@ -367,15 +367,100 @@ void VirtualMachine::run(const std::vector<Instruction>& code) {
             }
             case OpCode::HALT: return;
             case OpCode::GET_FIELD: {
-                auto inst = std::get<std::shared_ptr<StructInstance>>(pop());
-                push(inst->fields[std::get<std::string>(instr.operand)]);
+                auto obj = pop();
+                std::string field_name = std::get<std::string>(instr.operand);
+                if (std::holds_alternative<std::shared_ptr<StructInstance>>(obj)) {
+                    auto inst = std::get<std::shared_ptr<StructInstance>>(obj);
+                    push(inst->fields[field_name]);
+                } else if (std::holds_alternative<std::shared_ptr<ClassInstance>>(obj)) {
+                    auto inst = std::get<std::shared_ptr<ClassInstance>>(obj);
+                    if (inst->fields.count(field_name)) {
+                        push(inst->fields[field_name]);
+                    } else {
+                        // Look in method table
+                        auto curr_def = inst->definition;
+                        while (curr_def) {
+                            if (curr_def->methods.count(field_name)) {
+                                push(obj); // Push 'self'
+                                push((int64_t)curr_def->methods[field_name]);
+                                goto found_field;
+                            }
+                            // Search superclass
+                            if (!curr_def->superclass.empty()) {
+                                auto it = globals_.find(curr_def->superclass);
+                                if (it != globals_.end() && std::holds_alternative<std::shared_ptr<ClassDefinition>>(it->second)) {
+                                    curr_def = std::get<std::shared_ptr<ClassDefinition>>(it->second);
+                                    continue;
+                                }
+                            }
+                            break;
+                        }
+                        throw std::runtime_error("Field/Method '" + field_name + "' not found in class " + inst->definition->name);
+                    }
+                }
+                found_field:;
                 break;
             }
             case OpCode::SET_FIELD: {
                 auto val = pop();
-                auto inst = std::get<std::shared_ptr<StructInstance>>(pop());
-                inst->fields[std::get<std::string>(instr.operand)] = val;
-                push(val);
+                auto obj = pop();
+                std::string field_name = std::get<std::string>(instr.operand);
+                if (std::holds_alternative<std::shared_ptr<StructInstance>>(obj)) {
+                    auto inst = std::get<std::shared_ptr<StructInstance>>(obj);
+                    inst->fields[field_name] = val;
+                    push(val);
+                } else if (std::holds_alternative<std::shared_ptr<ClassInstance>>(obj)) {
+                    auto inst = std::get<std::shared_ptr<ClassInstance>>(obj);
+                    inst->fields[field_name] = val;
+                    push(val);
+                }
+                break;
+            }
+            case OpCode::CLASS_DEF: {
+                std::string data = std::get<std::string>(instr.operand);
+                size_t colon = data.find(':');
+                std::string name = data.substr(0, colon);
+                std::string super = (colon != std::string::npos) ? data.substr(colon + 1) : "";
+
+                auto def = std::make_shared<ClassDefinition>(name, super);
+                
+                // Inherit fields from superclass
+                if (!super.empty()) {
+                    auto it = globals_.find(super);
+                    if (it != globals_.end() && std::holds_alternative<std::shared_ptr<ClassDefinition>>(it->second)) {
+                        auto super_def = std::get<std::shared_ptr<ClassDefinition>>(it->second);
+                        def->fields = super_def->fields;
+                        def->methods = super_def->methods;
+                    }
+                }
+
+                // Collect methods starting with "name."
+                for (const auto& [lbl, val] : globals_) {
+                    if (lbl.find(name + ".") == 0) {
+                        std::string method_name = lbl.substr(name.length() + 1);
+                        if (std::holds_alternative<int64_t>(val)) {
+                            def->methods[method_name] = (size_t)std::get<int64_t>(val);
+                        } else if (std::holds_alternative<Label>(val)) {
+                            def->methods[method_name] = (size_t)std::get<Label>(val).index;
+                        }
+                    }
+                }
+
+                globals_[name] = def;
+                all_class_definitions_.push_back(def);
+                break;
+            }
+            case OpCode::NEW_INSTANCE: {
+                std::string class_name = std::get<std::string>(instr.operand);
+                if (globals_.count(class_name) && std::holds_alternative<std::shared_ptr<ClassDefinition>>(globals_[class_name])) {
+                    auto def = std::get<std::shared_ptr<ClassDefinition>>(globals_[class_name]);
+                    auto inst = std::make_shared<ClassInstance>(def);
+                    inst->fields = def->fields;
+                    push(inst);
+                    all_class_instances_.push_back(inst);
+                } else {
+                    throw std::runtime_error("Unknown class '" + class_name + "'");
+                }
                 break;
             }
             case OpCode::NEW_STRUCT: {
@@ -494,6 +579,8 @@ std::string VirtualMachine::valueToString(const IRValue& val) {
     if (std::holds_alternative<std::shared_ptr<StructInstance>>(val)) return "[struct instance]";
     if (std::holds_alternative<std::shared_ptr<Closure>>(val)) return "[closure]";
     if (std::holds_alternative<std::shared_ptr<Upvalue>>(val)) return "[upvalue]";
+    if (std::holds_alternative<std::shared_ptr<ClassDefinition>>(val)) return "[class " + std::get<std::shared_ptr<ClassDefinition>>(val)->name + "]";
+    if (std::holds_alternative<std::shared_ptr<ClassInstance>>(val)) return "[instance of " + std::get<std::shared_ptr<ClassInstance>>(val)->definition->name + "]";
     if (std::holds_alternative<std::shared_ptr<ArrayInstance>>(val)) {
         auto arr = std::get<std::shared_ptr<ArrayInstance>>(val);
         std::string s = "[";
@@ -543,6 +630,8 @@ std::string VirtualMachine::opcodeToString(OpCode op) noexcept {
         case OpCode::TRY_BEGIN: return "TRY_BEGIN";
         case OpCode::TRY_END: return "TRY_END";
         case OpCode::THROW: return "THROW";
+        case OpCode::CLASS_DEF: return "CLASS_DEF";
+        case OpCode::NEW_INSTANCE: return "NEW_INSTANCE";
         case OpCode::POP: return "POP";
         case OpCode::DUP: return "DUP";
         case OpCode::NOP: return "NOP";

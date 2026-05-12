@@ -1,0 +1,24 @@
+class Animal {
+    let name: str;
+    
+    fn speak() {
+        io.print("Animal makes a sound.");
+    }
+}
+
+class Dog extends Animal {
+    fn speak() {
+        io.print("Dog barks!");
+    }
+}
+
+fn main() {
+    let d = Dog { name: "Buddy" }; // Wait, I didn't implement Class instantiation syntax like this yet.
+    // I should use something like `new Dog()` or just `Dog()`?
+    // Current Parser implementation for ClassStmt doesn't handle a constructor yet.
+    // But I can set fields directly.
+    
+    // Actually, I need to implement a way to create an instance.
+    // In many languages, calling the class name as a function creates an instance.
+}
+main();

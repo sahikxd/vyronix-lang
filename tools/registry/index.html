@@ -1,12 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta http-equiv="refresh" content="0; url=packages.json">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="refresh" content="2; url=packages.json">
   <title>VYRONIX Registry</title>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f9f9f9; color: #333; }
+    .container { text-align: center; padding: 2rem; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+    h1 { color: #007bff; margin-bottom: 0.5rem; }
+    p { color: #666; }
+    .loader { border: 4px solid #f3f3f3; border-top: 4px solid #007bff; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 1rem auto; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
 </head>
 <body>
-  <h1>📦 VYRONIX Package Registry</h1>
-  <p>Redirecting to <a href="packages.json">packages.json</a>...</p>
-  <p>Use: <code>vyx install http</code></p>
+  <div class="container">
+    <h1>📦 VYRONIX Registry</h1>
+    <p>Redirecting to package index...</p>
+    <div class="loader"></div>
+    <p>If you are not redirected, <a href="packages.json">click here</a>.</p>
+  </div>
 </body>
 </html>

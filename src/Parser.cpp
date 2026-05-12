@@ -41,6 +41,7 @@ std::unique_ptr<Stmt> Parser::declaration() {
 
         if (check(TokenType::IMPORT) || check(TokenType::USE) || check(TokenType::EXPORT)) return importDeclaration();
         if (check(TokenType::STRUCT)) return structDeclaration();
+        if (check(TokenType::CLASS)) return classDeclaration();
         if (check(TokenType::ENUM)) return enumDeclaration();
         if (check(TokenType::FN)) return functionDeclaration();
         if (check(TokenType::PROC)) return procDeclaration();
@@ -180,6 +181,36 @@ std::unique_ptr<Stmt> Parser::structDeclaration() {
     
     consume(TokenType::RBRACE, "Expect '}' after struct body.");
     return std::make_unique<StructStmt>(name, std::move(fields), std::move(type_params));
+}
+
+std::unique_ptr<Stmt> Parser::classDeclaration() {
+    advance(); // Consume CLASS
+    Token name = consume(TokenType::IDENTIFIER, "Expect class name.");
+
+    std::optional<Token> superclass;
+    if (match({TokenType::EXTENDS})) {
+        superclass = consume(TokenType::IDENTIFIER, "Expect superclass name.");
+    }
+
+    consume(TokenType::LBRACE, "Expect '{' before class body.");
+
+    std::vector<std::unique_ptr<VarStmt>> fields;
+    std::vector<std::unique_ptr<FunctionStmt>> methods;
+
+    while (!check(TokenType::RBRACE) && !isAtEnd()) {
+        if (check(TokenType::FN)) {
+            auto method = functionDeclaration();
+            methods.push_back(std::unique_ptr<FunctionStmt>(static_cast<FunctionStmt*>(method.release())));
+        } else if (check(TokenType::LET) || check(TokenType::VAR)) {
+            auto field = variableDeclaration();
+            fields.push_back(std::unique_ptr<VarStmt>(static_cast<VarStmt*>(field.release())));
+        } else {
+            throw error(peek(), "Expect method or field declaration in class body.");
+        }
+    }
+
+    consume(TokenType::RBRACE, "Expect '}' after class body.");
+    return std::make_unique<ClassStmt>(name, superclass, std::move(fields), std::move(methods));
 }
 
 std::unique_ptr<Stmt> Parser::enumDeclaration() {
