@@ -1,0 +1,12 @@
+// test_null.vx
+
+fn main() {
+    let x = null;
+    print("x is {x}");
+    
+    if (x == null) {
+        print("x is indeed null");
+    }
+}
+
+main();

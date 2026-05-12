@@ -1,0 +1,62 @@
+# Build & Binaries
+build/
+out/
+dist/
+obj/
+*.exe
+*.vyb
+*.vxb
+*.o
+*.a
+*.so
+*.dll
+*.dylib
+*.pdb
+*.ilk
+*.exp
+
+# IDE & Editor
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Diagnostics & Logs
+crash_dumps/
+*.log
+vm_state_*.bin
+*.core
+build_err.txt
+build_out.txt
+output.txt
+out_final.txt
+out_parse.txt
+debug_out.txt
+
+# Secrets & Env
+.env
+*.env
+secrets/
+tokens/
+*.pem
+*.key
+*.p12
+
+# Package Manager Cache
+vx_modules/
+.vyx_cache/
+__pycache__/
+
+# Temporary
+*.tmp
+*.bak
+*.orig
+*.rej
+st5MQVps
+stlhKvdB
+stsohWlh
+out_tmp.vxb

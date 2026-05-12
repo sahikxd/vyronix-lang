@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wiki & FAQ – VYRONIX</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; line-height: 1.6; color: #333; padding: 0 1rem; }
+    .nav { margin-bottom: 2rem; }
+    .nav a { text-decoration: none; color: #007bff; font-weight: bold; }
+    h1 { border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
+    .faq-item { margin-bottom: 2rem; }
+    .question { font-weight: bold; font-size: 1.2rem; color: #6f42c1; margin-bottom: 0.5rem; }
+    .answer { background: #f4f4f4; padding: 1rem; border-radius: 8px; }
+    footer { text-align: center; color: #666; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #eee; }
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <a href="index.html">← Back to Home</a>
+  </div>
+
+  <h1>📖 Wiki & FAQ</h1>
+  <p>Common questions and technical details about the VYRONIX ecosystem.</p>
+
+  <div class="faq-item">
+    <div class="question">Q: Why C++17 for the implementation?</div>
+    <div class="answer">
+      C++17 provides a perfect balance of modern features (like <code>std::variant</code>, <code>std::optional</code>, <code>std::filesystem</code>) and high performance, making it ideal for building a fast VM and compiler.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="question">Q: Is VYRONIX compiled or interpreted?</div>
+    <div class="answer">
+      VYRONIX uses a hybrid approach. It is compiled into custom bytecode (<code>.vyb</code>), which is then executed by a highly optimized stack-based Virtual Machine.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="question">Q: How does the Package Manager work?</div>
+    <div class="answer">
+      <code>vyx</code> is decentralized. It uses GitHub as a registry. When you run <code>vyx install</code>, it looks up the package in a static JSON file hosted on GitHub Pages and downloads the source directly from the repository.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="question">Q: What makes the Optimizer "Peephole"?</div>
+    <div class="answer">
+      A peephole optimizer looks at small windows of instructions (the "peephole") and replaces inefficient sequences with faster ones, such as removing redundant PUSH/POP pairs or folding constants.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="question">Q: Can I use C++ libraries in VYRONIX?</div>
+    <div class="answer">
+      Yes! Through our experimental FFI (Foreign Function Interface), you can load dynamic libraries (.dll/.so) and call native functions directly from VYRONIX code.
+    </div>
+  </div>
+
+  <footer>
+    <p>VYRONIX Wiki • Maintained by @sahikxd</p>
+  </footer>
+</body>
+</html>

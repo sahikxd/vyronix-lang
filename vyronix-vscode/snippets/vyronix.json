@@ -1,0 +1,116 @@
+{
+    "Function Declaration": {
+        "prefix": "fn",
+        "body": [
+            "fn ${1:name}(${2:params}) {",
+            "    $0",
+            "}"
+        ],
+        "description": "Define a function"
+    },
+    "Procedure Declaration": {
+        "prefix": "proc",
+        "body": [
+            "proc ${1:name}(${2:params}) {",
+            "    $0",
+            "}"
+        ],
+        "description": "Define a procedure"
+    },
+    "Main Function": {
+        "prefix": "main",
+        "body": [
+            "fn main() {",
+            "    $0",
+            "}",
+            "",
+            "main();"
+        ],
+        "description": "Define main entry point"
+    },
+    "Let Variable": {
+        "prefix": "let",
+        "body": [
+            "let ${1:name} = ${2:value};"
+        ],
+        "description": "Declare a variable"
+    },
+    "If Statement": {
+        "prefix": "if",
+        "body": [
+            "if (${1:condition}) {",
+            "    $0",
+            "}"
+        ],
+        "description": "If control flow"
+    },
+    "Loop Statement": {
+        "prefix": "loop",
+        "body": [
+            "loop (${1:condition}) {",
+            "    $0",
+            "}"
+        ],
+        "description": "Conditional loop"
+    },
+    "For Loop": {
+        "prefix": "for",
+        "body": [
+            "for ${1:i} = ${2:0} to ${3:10} {",
+            "    $0",
+            "}"
+        ],
+        "description": "Iterative loop"
+    },
+    "Match Case": {
+        "prefix": "match",
+        "body": [
+            "match (${1:expression}) {",
+            "    case ${2:literal}: {",
+            "        $3",
+            "    }",
+            "    default: {",
+            "        $0",
+            "    }",
+            "}"
+        ],
+        "description": "Pattern matching"
+    },
+    "Print Statement": {
+        "prefix": "say",
+        "body": [
+            "io.print(\"$1\");"
+        ],
+        "description": "Output to console"
+    },
+    "IO Print": {
+        "prefix": "print",
+        "body": [
+            "io.print(\"$1\");"
+        ],
+        "description": "Output to console"
+    },
+    "FS Read": {
+        "prefix": "read",
+        "body": [
+            "let ${1:content} = fs.read(\"${2:path}\");"
+        ],
+        "description": "Read file content"
+    },
+    "Math Sqrt": {
+        "prefix": "sqrt",
+        "body": [
+            "math.sqrt(${1:value})"
+        ],
+        "description": "Square root"
+    },
+    "Struct Declaration": {
+        "prefix": "struct",
+        "body": [
+            "struct ${1:Name} {",
+            "    ${2:field}: ${3:type};",
+            "}"
+        ],
+        "description": "Define a data structure"
+    }
+}

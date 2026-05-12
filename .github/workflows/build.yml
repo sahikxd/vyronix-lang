@@ -1,0 +1,58 @@
+name: VYRONIX CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up C++
+      if: matrix.os != 'windows-latest'
+      run: |
+        sudo apt-get update || true
+        sudo apt-get install -y build-essential || true
+
+    - name: Build (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        .\build.bat
+
+    - name: Build (Linux/macOS)
+      if: matrix.os != 'windows-latest'
+      run: |
+        make all
+
+    - name: Run Tests (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        .\test_lexer.exe
+        .\test_parser.exe
+        .\test_semantic.exe
+        .\vyronixc.exe test_weak.vx
+        .\vyronixvm.exe out.vyb
+
+    - name: Run Tests (Linux/macOS)
+      if: matrix.os != 'windows-latest'
+      run: |
+        ./vyronixc test_weak.vx
+        ./vyronixvm out.vyb
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: vyronix-${{ matrix.os }}
+        path: |
+          vyronix*
+          *.exe
+          *.a

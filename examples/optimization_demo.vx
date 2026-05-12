@@ -1,0 +1,14 @@
+fn main() {
+    let x = 5 + 10 * 2; // Should fold to 25
+    if (true) {
+        io.print(x);
+    }
+    
+    // Test redundant push/pop
+    let y = 100;
+    y = 200; // The store leaves 200 on stack, then we pop it.
+    
+    io.print("Done.");
+}
+
+main();

@@ -1,0 +1,11 @@
+// test_const_inference.vx
+
+fn main() {
+    const PI = 3.14159;
+    const APP_NAME = "VYRONIX";
+    
+    print("App: {APP_NAME}");
+    print("PI: {PI}");
+}
+
+main();

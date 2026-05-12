@@ -1,0 +1,28 @@
+struct Node {
+    value: i64;
+    next: any;
+}
+
+fn main() {
+    let n1 = Node { value: 1, next: null };
+    let n2 = Node { value: 2, next: null };
+    
+    // Create cycle
+    n1.next = n2;
+    n2.next = n1;
+    
+    io.print("Cycle created.");
+    
+    // Use weak pointer
+    let wn1 = weak.create(n1);
+    io.print("Weak pointer valid:");
+    io.print(weak.valid(wn1));
+    
+    let locked = weak.lock(wn1);
+    io.print("Locked value:");
+    io.print(locked.value);
+    
+    io.print("Done.");
+}
+
+main();

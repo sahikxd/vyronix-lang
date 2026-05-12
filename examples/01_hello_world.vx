@@ -1,0 +1,15 @@
+// 01_hello_world.vx
+// Basic introduction to VYRONIX syntax
+
+fn main() {
+    let greeting = "Hello";
+    let target = "VYRONIX Developer";
+    
+    // String interpolation support
+    print("{greeting}, {target}!");
+    
+    let version = 1.0;
+    print("Welcome to VYRONIX version {version}");
+}
+
+main();

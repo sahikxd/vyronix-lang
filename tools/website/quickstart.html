@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quickstart Guide – VYRONIX</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; line-height: 1.6; color: #333; padding: 0 1rem; }
+    code { background: #f4f4f4; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; }
+    pre { background: #2d2d2d; color: #ccc; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+    .nav { margin-bottom: 2rem; }
+    .nav a { text-decoration: none; color: #007bff; font-weight: bold; }
+    h1 { border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
+    h2 { margin-top: 2rem; color: #444; }
+    .step { background: #f9f9f9; padding: 1rem; border-left: 4px solid #28a745; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+    footer { text-align: center; color: #666; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #eee; }
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <a href="index.html">← Back to Home</a>
+  </div>
+
+  <h1>🚀 Quickstart Guide</h1>
+  <p>Get up and running with VYRONIX in less than 5 minutes.</p>
+
+  <h2>1. Installation</h2>
+  <div class="step">
+    <p>Download the latest <code>vyronix</code> and <code>vyx</code> binaries from the <a href="https://github.com/sahikxd/vyronix/releases">Releases page</a>. Add them to your system PATH.</p>
+  </div>
+
+  <h2>2. Your First Program</h2>
+  <p>Create a file named <code>hello.vx</code>:</p>
+  <pre><code>// hello.vx
+fn main() {
+    let name = "Developer";
+    io.print("Hello, " + name + "! Welcome to VYRONIX.");
+}
+
+main();</code></pre>
+
+  <h2>3. Running the Code</h2>
+  <p>Use the <code>run</code> command to compile and execute instantly:</p>
+  <pre><code>vyronix run hello.vx</code></pre>
+
+  <h2>4. Compiling to Bytecode</h2>
+  <p>For distribution, compile to the optimized <code>.vyb</code> format:</p>
+  <pre><code>vyronix build hello.vx -o hello.vyb
+vyronixvm hello.vyb</code></pre>
+
+  <h2>5. Using the Package Manager</h2>
+  <p>Initialize a project and install dependencies:</p>
+  <pre><code>vyx init
+vyx install http</code></pre>
+
+  <footer>
+    <p>VYRONIX Documentation • Built by @sahikxd</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,30 @@
+// 05_loops_and_logic.vx
+// Demonstrates various loop types and logic
+
+fn main() {
+    print("--- For Loop (1 to 5) ---");
+    for i = 1 to 5 {
+        print("Count: {i}");
+    }
+    
+    print("--- Loop with condition ---");
+    let x = 5;
+    loop (x > 0) {
+        print("x is {x}");
+        x = x - 1;
+        
+        if (x == 2) {
+            print("Halfway there!");
+        }
+    }
+    
+    print("--- Logic Operations ---");
+    let a = true;
+    let b = false;
+    
+    if (a and not b) {
+        print("Logic works correctly!");
+    }
+}
+
+main();

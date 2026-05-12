@@ -1,0 +1,22 @@
+fn identity<T>(x: T) -> T {
+    return x;
+}
+
+print(identity<i64>(10));
+print(identity<str>("Hello Generics"));
+
+struct Box<T> {
+    value: T;
+}
+
+// Struct instantiation with generics
+// var b = Box<i64> { value: 42 }; 
+// print(b.value);
+
+// Multiple type parameters
+fn pair<T, U>(first: T, second: U) -> void {
+    print(first);
+    print(second);
+}
+
+pair<i64, str>(1, "one");

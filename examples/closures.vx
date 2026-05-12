@@ -1,0 +1,22 @@
+var x = 10;
+var addX = fn(y: i64) -> i64 {
+    return x + y;
+};
+
+print(addX(5)); // Should print 15
+
+x = 20;
+print(addX(5)); // Should print 25 (lexical capture of variable, not value)
+
+var makeCounter = fn() -> any {
+    var count = 0;
+    return fn() -> i64 {
+        count = count + 1;
+        return count;
+    };
+};
+
+var counter = makeCounter();
+print(counter()); // 1
+print(counter()); // 2
+print(counter()); // 3

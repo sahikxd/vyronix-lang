@@ -1,0 +1,24 @@
+fn main() {
+    io.print("--- VYRONIX Phase 5 Test ---");
+    
+    let msg = "Hello, VYRONIX!";
+    io.print("Original: " + msg);
+    io.print("Upper: " + str.upper(msg));
+    io.print("Lower: " + str.lower(msg));
+    
+    let numbers = [3, 1, 4, 1, 5];
+    io.print("Initial array size: " + str.len(numbers));
+    
+    arr.push(numbers, 9);
+    io.print("Size after push: " + str.len(numbers));
+    
+    arr.sort(numbers);
+    io.print("Sorted numbers...");
+    
+    let time = sys.time();
+    io.print("Current sys time: " + time);
+    
+    io.print("Test complete.");
+}
+
+main();

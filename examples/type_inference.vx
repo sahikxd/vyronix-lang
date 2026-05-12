@@ -1,0 +1,15 @@
+// test_inference.vx
+
+fn main() {
+    let x = 5;
+    let y = 3.14;
+    let z = "Hello";
+    let w = true;
+    
+    print("x: {x}");
+    print("y: {y}");
+    print("z: {z}");
+    print("w: {w}");
+}
+
+main();

@@ -1,0 +1,34 @@
+// 04_pattern_matching.vx
+// Demonstrates the match statement
+
+enum Command { START, STOP, PAUSE, UNKNOWN }
+
+fn execute(cmd: i64) {
+    match (cmd) {
+        case START: {
+            print("System starting...");
+        }
+        case STOP: {
+            print("System stopped.");
+        }
+        case PAUSE: {
+            print("System paused.");
+        }
+        default: {
+            print("Unknown command received.");
+        }
+    }
+}
+
+fn main() {
+    let c = START;
+    execute(c);
+    
+    c = PAUSE;
+    execute(c);
+    
+    let error_cmd = UNKNOWN;
+    execute(error_cmd);
+}
+
+main();

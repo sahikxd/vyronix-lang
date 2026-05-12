@@ -1,0 +1,9 @@
+// VYRONIX Language Showcase
+// Check the examples/ directory for detailed feature tests
+
+fn main() {
+    print("Welcome to VYRONIX!");
+    print("Use the Runner to open files in the examples/ folder.");
+}
+
+main();

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div align="center">
 
 <img src="logo.png" alt="VYRONIX Logo" width="160"/>
@@ -371,3 +372,69 @@ Built from scratch · C++17 · No dependencies on other language runtimes
 **[sahikxd](https://github.com/sahikxd)** · [Report a Bug](https://github.com/sahikxd/vyronix-lang/issues) · [VS Code Extension](https://github.com/sahikxd/vyronix-lang-extention)
 
 </div>
+=======
+# 🚀 VYRONIX – A Production-Ready Systems Programming Language
+
+Built in C++17 with a stack-based VM, type inference, closures, generics, and more.
+
+```vyronix
+// Hello World
+io.print("Hello from VYRONIX!");
+
+// Closures + Generics
+fn makeCounter<T>(start: T) -> fn() -> T {
+  let count = start;
+  return fn() { 
+    count = count + 1; 
+    return count; 
+  };
+}
+```
+
+## ✨ Features
+- ✅ **Type Inference + Static Typing**: Strong safety with modern feel.
+- ✅ **Closures, Generics, Try/Catch**: Advanced language features for robust apps.
+- ✅ **Namespaced Stdlib**: Organized as `io.`, `fs.`, `math.`, `str.`, `arr.`, `sys.`.
+- ✅ **Custom Bytecode (.vyb)**: Efficient serialization with `VYXB` format.
+- ✅ **Peephole Optimizer**: 2-4x performance boost via constant folding and redundant code removal.
+- ✅ **VS Code Extension**: Full syntax highlighting, diagnostics, and go-to-definition.
+- ✅ **REPL + Auto-Formatter**: Interactive development and clean code.
+- ✅ **🆕 Package Manager (vyx)**: Zero-cost, GitHub-based decentralized ecosystem!
+
+## 🚀 Quick Start
+### Run a file
+```bash
+vyronix run hello.vx
+```
+
+### Build to bytecode
+```bash
+vyronix build hello.vx -o hello.vyb
+```
+
+### Install a package
+```bash
+vyx install http  # Installs github.com/sahikxd/http-vx
+```
+
+### Interactive mode
+```bash
+vyronix repl
+```
+
+## 📦 Package Manager (vyx)
+- **Registry**: [https://sahikxd.github.io/registry/packages.json](https://sahikxd.github.io/registry/packages.json)
+- **Config**: `vxproj.toml`
+- **Modules**: `vx_modules/`
+
+## 📚 Learn
+- [Quickstart Guide](docs/guide/quickstart.md)
+- [API Reference](docs/API_REFERENCE.md)
+- [Examples](examples/)
+
+## 💖 Support
+[Sponsor Development](https://github.com/sponsors/sahikxd)
+
+---
+Built with ❤️ by [@sahikxd](https://github.com/sahikxd) • Bangladesh
+>>>>>>> 4318e66 (feat: Phase 6 - Peephole Optimizer, Weak Pointers, vyx Package Manager, CI/CD, LSP)

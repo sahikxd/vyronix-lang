@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Code Examples – VYRONIX</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; line-height: 1.6; color: #333; padding: 0 1rem; }
+    code { background: #f4f4f4; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; }
+    pre { background: #2d2d2d; color: #ccc; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+    .nav { margin-bottom: 2rem; }
+    .nav a { text-decoration: none; color: #007bff; font-weight: bold; }
+    h1 { border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
+    .example-box { margin-bottom: 3rem; }
+    .example-box h2 { color: #28a745; margin-bottom: 0.5rem; }
+    .description { color: #666; font-style: italic; margin-bottom: 1rem; }
+    footer { text-align: center; color: #666; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #eee; }
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <a href="index.html">← Back to Home</a>
+  </div>
+
+  <h1>💻 Code Examples</h1>
+  <p>Explore the power of VYRONIX through these snippets.</p>
+
+  <div class="example-box">
+    <h2>1. Fibonacci Sequence</h2>
+    <p class="description">Classic recursive implementation showing function calls and basic math.</p>
+    <pre><code>fn fib(n: i64) -> i64 {
+    if (n <= 1) return n;
+    return fib(n - 1) + fib(n - 2);
+}
+
+io.print(fib(10)); // Output: 55</code></pre>
+  </div>
+
+  <div class="example-box">
+    <h2>2. Higher-Order Functions & Closures</h2>
+    <p class="description">Functions that return functions, capturing local state.</p>
+    <pre><code>fn multiplier(factor: i64) -> fn(i64) -> i64 {
+    return fn(n: i64) { 
+        return n * factor; 
+    };
+}
+
+let double = multiplier(2);
+io.print(double(5)); // Output: 10</code></pre>
+  </div>
+
+  <div class="example-box">
+    <h2>3. Structs & Data Modeling</h2>
+    <p class="description">Defining custom types with fields.</p>
+    <pre><code>struct Point {
+    x: f64,
+    y: f64
+}
+
+let p = Point { x: 10.5, y: 20.0 };
+io.print(p.x);</code></pre>
+  </div>
+
+  <div class="example-box">
+    <h2>4. Error Handling (Try/Catch)</h2>
+    <p class="description">Safe execution and exception management.</p>
+    <pre><code>try {
+    throw "Something went wrong!";
+} catch (e) {
+    io.print("Caught error: " + e);
+}</code></pre>
+  </div>
+
+  <div class="example-box">
+    <h2>5. Generics</h2>
+    <p class="description">Writing reusable code for any data type.</p>
+    <pre><code>fn identity<T>(value: T) -> T {
+    return value;
+}
+
+let a = identity(42);
+let b = identity("Hello");</code></pre>
+  </div>
+
+  <footer>
+    <p>VYRONIX Examples • Shared by @sahikxd</p>
+  </footer>
+</body>
+</html>

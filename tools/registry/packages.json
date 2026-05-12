@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "registry": "https://sahikxd.github.io/registry",
+  "packages": {
+    "http": {
+      "repo": "github.com/sahikxd/http-vx",
+      "description": "HTTP client/server for VYRONIX",
+      "latest": "v1.0.0",
+      "versions": ["v1.0.0"]
+    },
+    "json": {
+      "repo": "github.com/sahikxd/json-vx",
+      "description": "JSON parse/stringify library",
+      "latest": "v0.1.0",
+      "versions": ["v0.1.0"]
+    }
+  }
+}
