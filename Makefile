@@ -23,6 +23,7 @@ ifeq ($(OS),Windows_NT)
     MKDIR = if not exist $(OBJ_DIR) mkdir $(OBJ_DIR)
     RM = if exist $(OBJ_DIR) rmdir /s /q $(OBJ_DIR)
     BUILD_RUNNER = vyronix_runner
+    LDFLAGS += -static
 else
     EXE =
     RESOURCE_OBJ =
@@ -30,6 +31,7 @@ else
     MKDIR = mkdir -p $(OBJ_DIR)
     RM = rm -rf $(OBJ_DIR)
     BUILD_RUNNER = 
+    # macOS/Linux usually don't want -static by default for stdlib
 endif
 
 all: vyronixc vyronixvm vyronix-runtime.a vyronix vyx $(BUILD_RUNNER)
