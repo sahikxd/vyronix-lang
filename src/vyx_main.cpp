@@ -53,17 +53,54 @@ bool extractZip(const std::string& zipPath, const std::string& outDir) {
     return true;
 }
 
+std::string resolveAlias(const std::string& alias) {
+    std::string registryUrl = "https://sahikxd.github.io/registry/packages.json";
+    std::string tempJson = "registry_tmp.json";
+    
+    if (!downloadFile(registryUrl, tempJson)) {
+        return "";
+    }
+
+    std::ifstream file(tempJson);
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    std::string content = buffer.str();
+    file.close();
+    fs::remove(tempJson);
+
+    // Simple manual JSON parser for "alias": { "repo": "..." }
+    size_t aliasPos = content.find("\"" + alias + "\"");
+    if (aliasPos == std::string::npos) return "";
+
+    size_t repoKeyPos = content.find("\"repo\"", aliasPos);
+    if (repoKeyPos == std::string::npos) return "";
+
+    size_t colonPos = content.find(":", repoKeyPos);
+    size_t startQuote = content.find("\"", colonPos);
+    size_t endQuote = content.find("\"", startQuote + 1);
+
+    if (startQuote != std::string::npos && endQuote != std::string::npos) {
+        std::string repo = content.substr(startQuote + 1, endQuote - startQuote - 1);
+        // Remove "github.com/" prefix if present
+        if (repo.find("github.com/") == 0) {
+            repo = repo.substr(11);
+        }
+        return repo;
+    }
+
+    return "";
+}
+
 void installPackage(const std::string& pkg) {
     std::string repo = pkg;
     std::string alias = pkg;
     std::string tag = "main";
 
     if (pkg.find('/') == std::string::npos) {
-        // Look up in registry (mock for now)
-        if (pkg == "http") repo = "sahikxd/http-vx";
-        else if (pkg == "json") repo = "sahikxd/json-vx";
-        else {
-            std::cerr << "Error: Unknown alias '" << pkg << "'. Use user/repo format.\n";
+        std::cout << "Looking up '" << pkg << "' in registry...\n";
+        repo = resolveAlias(pkg);
+        if (repo.empty()) {
+            std::cerr << "Error: Package '" << pkg << "' not found in registry. Use user/repo format.\n";
             return;
         }
         alias = pkg;
