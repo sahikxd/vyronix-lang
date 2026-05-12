@@ -1,598 +1,598 @@
-<!DOCTYPE html> 
- <html lang="en" data-theme="light"> 
- <head> 
-   <meta charset="UTF-8" /> 
-   <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
-   <title>VYRONIX — Systems Programming Language</title> 
-  
-   <style> 
-     /* ===== CSS VARIABLES FOR THEMES ===== */ 
-     :root { 
-       /* Light Theme (Default) */ 
-       --bg-primary: #ffffff; 
-       --bg-secondary: #f9fafb; 
-       --bg-card: #ffffff; 
-       --bg-code: #f8fafc; 
-       --bg-nav: #ffffffee; 
-       --bg-footer: #f9fafb; 
-       --text-primary: #1f2937; 
-       --text-secondary: #6b7280; 
-       --text-muted: #9ca3af; 
-       --border-color: #e5e7eb; 
-       --border-hover: #2563eb; 
-       --accent-blue: #2563eb; 
-       --accent-blue-hover: #1d4ed8; 
-       --accent-green: #16a34a; 
-       --accent-green-hover: #15803d; 
-       --code-color: #7c3aed; 
-       --card-shadow: 0 2px 8px rgba(0,0,0,0.04); 
-       --card-shadow-hover: 0 8px 25px rgba(37,99,235,0.15); 
-       --badge-bg: #f3f4f6; 
-       --badge-border: #d1d5db; 
-       --badge-text: #374151; 
-     } 
-  
-     [data-theme="dark"] { 
-       /* Dark Theme */ 
-       --bg-primary: #0f1117; 
-       --bg-secondary: #111827; 
-       --bg-card: #161b22; 
-       --bg-code: #161b22; 
-       --bg-nav: #0f1117ee; 
-       --bg-footer: #0f1117; 
-       --text-primary: #e6edf3; 
-       --text-secondary: #9ca3af; 
-       --text-muted: #6b7280; 
-       --border-color: #1f2937; 
-       --border-hover: #58a6ff; 
-       --accent-blue: #58a6ff; 
-       --accent-blue-hover: #79c0ff; 
-       --accent-green: #238636; 
-       --accent-green-hover: #2ea043; 
-       --code-color: #d2a8ff; 
-       --card-shadow: 0 2px 8px rgba(0,0,0,0.2); 
-       --card-shadow-hover: 0 8px 25px rgba(88,166,255,0.2); 
-       --badge-bg: #1f2937; 
-       --badge-border: #374151; 
-       --badge-text: #d1d5db; 
-     } 
-  
-     /* ===== BASE STYLES ===== */ 
-     * { 
-       margin: 0; 
-       padding: 0; 
-       box-sizing: border-box; 
-       transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; 
-     } 
-  
-     body { 
-       font-family: system-ui, -apple-system, sans-serif; 
-       background: var(--bg-primary); 
-       color: var(--text-primary); 
-       line-height: 1.7; 
-     } 
-  
-     a { 
-       text-decoration: none; 
-       color: inherit; 
-     } 
-  
-     .container { 
-       width: 90%; 
-       max-width: 1100px; 
-       margin: auto; 
-     } 
-  
-     /* ===== NAVBAR ===== */ 
-     .nav { 
-       position: sticky; 
-       top: 0; 
-       background: var(--bg-nav); 
-       backdrop-filter: blur(10px); 
-       border-bottom: 1px solid var(--border-color); 
-       z-index: 999; 
-     } 
-  
-     .nav-inner { 
-       display: flex; 
-       justify-content: space-between; 
-       align-items: center; 
-       padding: 18px 0; 
-     } 
-  
-     .nav-links { 
-       display: flex; 
-       gap: 20px; 
-       color: var(--text-secondary); 
-       font-size: 0.95rem; 
-     } 
-  
-     .nav-links a:hover { 
-       color: var(--text-primary); 
-     } 
-  
-     /* Theme Toggle Button */ 
-     .theme-toggle { 
-       background: var(--bg-card); 
-       border: 1px solid var(--border-color); 
-       color: var(--text-primary); 
-       padding: 8px 14px; 
-       border-radius: 999px; 
-       cursor: pointer; 
-       font-size: 1.1rem; 
-       display: flex; 
-       align-items: center; 
-       gap: 6px; 
-       transition: all 0.25s ease; 
-     } 
-  
-     .theme-toggle:hover { 
-       border-color: var(--border-hover); 
-       transform: scale(1.05); 
-     } 
-  
-     /* ===== HERO SECTION ===== */ 
-     header { 
-       padding: 80px 0; 
-       text-align: center; 
-       border-bottom: 1px solid var(--border-color); 
-       background: linear-gradient(to bottom, var(--bg-secondary), var(--bg-primary)); 
-     } 
-  
-     header h1 { 
-       font-size: 4rem; 
-       margin-bottom: 10px; 
-       color: var(--accent-blue); 
-     } 
-  
-     header p { 
-       color: var(--text-secondary); 
-       font-size: 1.1rem; 
-       max-width: 700px; 
-       margin: auto; 
-     } 
-  
-     .badges { 
-       margin-top: 25px; 
-       display: flex; 
-       flex-wrap: wrap; 
-       gap: 10px; 
-       justify-content: center; 
-     } 
-  
-     .badge { 
-       background: var(--badge-bg); 
-       border: 1px solid var(--badge-border); 
-       padding: 8px 14px; 
-       border-radius: 999px; 
-       font-size: 0.9rem; 
-       color: var(--badge-text); 
-     } 
-  
-     .buttons { 
-       margin-top: 35px; 
-       display: flex; 
-       flex-wrap: wrap; 
-       justify-content: center; 
-       gap: 15px; 
-     } 
-  
-     .btn { 
-       padding: 14px 24px; 
-       border-radius: 10px; 
-       font-weight: bold; 
-       transition: 0.25s; 
-       border: none; 
-       cursor: pointer; 
-     } 
-  
-     .btn-primary { 
-       background: var(--accent-green); 
-       color: white; 
-     } 
-  
-     .btn-primary:hover { 
-       background: var(--accent-green-hover); 
-     } 
-  
-     .btn-secondary { 
-       background: var(--accent-blue); 
-       color: white; 
-     } 
-  
-     .btn-secondary:hover { 
-       background: var(--accent-blue-hover); 
-     } 
-  
-     /* ===== SECTIONS ===== */ 
-     section { 
-       padding: 70px 0; 
-       border-bottom: 1px solid var(--border-color); 
-     } 
-  
-     .section-title { 
-       font-size: 2rem; 
-       margin-bottom: 20px; 
-       color: var(--accent-blue); 
-     } 
-  
-     .section-desc { 
-       color: var(--text-secondary); 
-       margin-bottom: 40px; 
-     } 
-  
-     .grid { 
-       display: grid; 
-       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
-       gap: 20px; 
-     } 
-  
-     .card { 
-       background: var(--bg-card); 
-       border: 1px solid var(--border-color); 
-       padding: 22px; 
-       border-radius: 16px; 
-       transition: 0.25s; 
-       box-shadow: var(--card-shadow); 
-     } 
-  
-     .card:hover { 
-       transform: translateY(-5px); 
-       border-color: var(--border-hover); 
-       box-shadow: var(--card-shadow-hover); 
-     } 
-  
-     .card h3 { 
-       margin-bottom: 10px; 
-       color: var(--text-primary); 
-     } 
-  
-     .card p { 
-       color: var(--text-secondary); 
-       font-size: 0.95rem; 
-     } 
-  
-     pre { 
-       background: var(--bg-code); 
-       border: 1px solid var(--border-color); 
-       padding: 20px; 
-       border-radius: 14px; 
-       overflow-x: auto; 
-       margin-top: 20px; 
-     } 
-  
-     code { 
-       font-family: Consolas, monospace; 
-       color: var(--code-color); 
-     } 
-  
-     .example { 
-       margin-bottom: 50px; 
-     } 
-  
-     .example h3 { 
-       margin-bottom: 10px; 
-       color: var(--accent-blue); 
-     } 
-  
-     .example p { 
-       color: var(--text-secondary); 
-       margin-bottom: 15px; 
-     } 
-  
-     .steps { 
-       display: flex; 
-       flex-direction: column; 
-       gap: 20px; 
-     } 
-  
-     .step { 
-       background: var(--bg-card); 
-       border-left: 4px solid var(--accent-blue); 
-       padding: 20px; 
-       border-radius: 10px; 
-       border: 1px solid var(--border-color); 
-     } 
-  
-     .faq { 
-       margin-bottom: 25px; 
-     } 
-  
-     .faq h3 { 
-       color: var(--accent-blue); 
-       margin-bottom: 10px; 
-     } 
-  
-     .faq p { 
-       color: var(--text-secondary); 
-     } 
-  
-     footer { 
-       padding: 40px 0; 
-       text-align: center; 
-       color: var(--text-muted); 
-       background: var(--bg-footer); 
-     } 
-  
-     /* ===== RESPONSIVE ===== */ 
-     @media (max-width: 768px) { 
-       header h1 { 
-         font-size: 2.8rem; 
-       } 
-  
-       .nav-inner { 
-         flex-direction: column; 
-         gap: 15px; 
-       } 
-  
-       .nav-links { 
-         flex-wrap: wrap; 
-         justify-content: center; 
-       } 
-     } 
-   </style> 
- </head> 
-  
- <body> 
-  
-   <!-- NAVBAR --> 
-   <div class="nav"> 
-     <div class="container nav-inner"> 
-       <h2>🚀 VYRONIX</h2> 
-  
-       <div style="display:flex;align-items:center;gap:15px;flex-wrap:wrap;"> 
-         <div class="nav-links"> 
-           <a href="#features">Features</a> 
-           <a href="#quickstart">Quick Start</a> 
-           <a href="#examples">Examples</a> 
-           <a href="#faq">FAQ</a> 
-           <a href="https://github.com/sahikxd/vyronix">GitHub</a> 
-         </div> 
-         <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"> 
-           <span id="themeIcon">🌓</span> 
-         </button> 
-       </div> 
-     </div> 
-   </div> 
-  
-   <!-- HERO --> 
-   <header> 
-     <div class="container"> 
-       <h1>VYRONIX</h1> 
-       <p> 
-         A modern systems programming language built in C++17 — 
-         fast, expressive, memory-safe, and designed for real-world development. 
-       </p> 
-  
-       <div class="badges"> 
-         <span class="badge">⚡ Fast VM</span> 
-         <span class="badge">🧠 Generics</span> 
-         <span class="badge">🛡️ Memory Safety</span> 
-         <span class="badge">📦 Package Manager</span> 
-         <span class="badge">🔥 Closures</span> 
-         <span class="badge">🧩 FFI</span> 
-         <span class="badge">📜 Bytecode</span> 
-       </div> 
-  
-       <div class="buttons"> 
-         <a class="btn btn-primary" href="https://github.com/sahikxd/vyronix/releases">⬇ Download</a> 
-         <a class="btn btn-secondary" href="https://github.com/sahikxd/vyronix">⭐ GitHub</a> 
-       </div> 
-     </div> 
-   </header> 
-  
-   <!-- FEATURES --> 
-   <section id="features"> 
-     <div class="container"> 
-       <h2 class="section-title">✨ Features</h2> 
-       <p class="section-desc"> 
-         Old-school performance. Modern developer experience. 
-         No bloated nonsense. Just clean engineering. 
-       </p> 
-  
-       <div class="grid"> 
-         <div class="card"> 
-           <h3>⚡ High Performance</h3> 
-           <p>Stack-based VM with optimized bytecode execution and peephole optimization.</p> 
-         </div> 
-         <div class="card"> 
-           <h3>🧠 Smart Type System</h3> 
-           <p>Static typing, type inference, generics, and cleaner compile-time safety.</p> 
-         </div> 
-         <div class="card"> 
-           <h3>🛡️ Memory Safety</h3> 
-           <p>RAII, weak pointers, and cycle detection for reliable low-level programming.</p> 
-         </div> 
-         <div class="card"> 
-           <h3>📦 Package Manager</h3> 
-           <p>Install packages instantly using the built-in <code>vyx</code> ecosystem.</p> 
-         </div> 
-         <div class="card"> 
-           <h3>🧩 Native FFI</h3> 
-           <p>Load DLLs and native libraries directly from VYRONIX code.</p> 
-         </div> 
-         <div class="card"> 
-           <h3>🛠️ Developer Tooling</h3> 
-           <p>REPL, formatter, LSP support, and detailed compiler diagnostics.</p> 
-         </div> 
-       </div> 
-     </div> 
-   </section> 
-  
-   <!-- QUICK START --> 
-   <section id="quickstart"> 
-     <div class="container"> 
-       <h2 class="section-title">🚀 Quick Start</h2> 
-       <div class="steps"> 
-         <div class="step"> 
-           <h3>1. Install</h3> 
-           <pre><code>Download binaries from GitHub Releases 
- and add them to PATH.</code></pre> 
-         </div> 
-         <div class="step"> 
-           <h3>2. Create hello.vx</h3> 
-           <pre><code>fn main() { 
-     let name = "Developer"; 
-     io.print("Hello, " + name + "!"); 
- } 
- main();</code></pre> 
-         </div> 
-         <div class="step"> 
-           <h3>3. Run</h3> 
-           <pre><code>vyronix run hello.vx</code></pre> 
-         </div> 
-         <div class="step"> 
-           <h3>4. Compile Bytecode</h3> 
-           <pre><code>vyronix build hello.vx -o hello.vyb 
- vyronixvm hello.vyb</code></pre> 
-         </div> 
-         <div class="step"> 
-           <h3>5. Install Packages</h3> 
-           <pre><code>vyx init 
- vyx install http</code></pre> 
-         </div> 
-       </div> 
-     </div> 
-   </section> 
-  
-   <!-- CODE EXAMPLES --> 
-   <section id="examples"> 
-     <div class="container"> 
-       <h2 class="section-title">💻 Code Examples</h2> 
-  
-       <div class="example"> 
-         <h3>1. Fibonacci Sequence</h3> 
-         <p>Recursive functions and basic math operations.</p> 
-         <pre><code>fn fib(n: i64) -> i64 { 
-     if (n <= 1) return n; 
-     return fib(n - 1) + fib(n - 2); 
- } 
- io.print(fib(10));</code></pre> 
-       </div> 
-  
-       <div class="example"> 
-         <h3>2. Closures & Higher-Order Functions</h3> 
-         <p>Functions returning functions while capturing local state.</p> 
-         <pre><code>fn multiplier(factor: i64) -> fn(i64) -> i64 { 
-     return fn(n: i64) { 
-         return n * factor; 
-     }; 
- } 
- let double = multiplier(2); 
- io.print(double(5));</code></pre> 
-       </div> 
-  
-       <div class="example"> 
-         <h3>3. Structs</h3> 
-         <p>Custom data structures with fields.</p> 
-         <pre><code>struct Point { 
-     x: f64, 
-     y: f64 
- } 
- let p = Point { 
-     x: 10.5, 
-     y: 20.0 
- }; 
- io.print(p.x);</code></pre> 
-       </div> 
-  
-       <div class="example"> 
-         <h3>4. Error Handling</h3> 
-         <p>Simple try/catch support.</p> 
-         <pre><code>try { 
-     throw "Something went wrong!"; 
- } catch (e) { 
-     io.print("Caught error: " + e); 
- }</code></pre> 
-       </div> 
-  
-       <div class="example"> 
-         <h3>5. Generics</h3> 
-         <p>Reusable code for multiple data types.</p> 
-         <pre><code>fn identity&lt;T&gt;(value: T) -> T { 
-     return value; 
- } 
- let a = identity(42); 
- let b = identity("Hello");</code></pre> 
-       </div> 
-     </div> 
-   </section> 
-  
-   <!-- FAQ --> 
-   <section id="faq"> 
-     <div class="container"> 
-       <h2 class="section-title">📖 Wiki & FAQ</h2> 
-       <div class="faq"> 
-         <h3>Why C++17?</h3> 
-         <p>Because it gives raw performance with modern tooling. You get low-level control without writing prehistoric code like it's 2003.</p> 
-       </div> 
-       <div class="faq"> 
-         <h3>Compiled or Interpreted?</h3> 
-         <p>Hybrid approach. VYRONIX compiles into <code>.vyb</code> bytecode, then executes through a custom stack VM.</p> 
-       </div> 
-       <div class="faq"> 
-         <h3>How does vyx work?</h3> 
-         <p>The package manager uses GitHub repositories as a decentralized registry. Lightweight. Simple. No corporate monster infrastructure needed.</p> 
-       </div> 
-       <div class="faq"> 
-         <h3>Can VYRONIX use native libraries?</h3> 
-         <p>Yes. Through experimental FFI support, you can call native DLLs and shared libraries.</p> 
-       </div> 
-       <div class="faq"> 
-         <h3>What is Peephole Optimization?</h3> 
-         <p>The optimizer scans tiny instruction patterns and replaces wasteful operations with faster equivalents.</p> 
-       </div> 
-     </div> 
-   </section> 
-  
-   <!-- FOOTER --> 
-   <footer> 
-     <div class="container"> 
-       <h2>🚀 VYRONIX</h2> 
-       <p style="margin-top:10px;">Built with ❤️ by @sahikxd — Bangladesh</p> 
-       <p style="margin-top:10px;">MIT Licensed • C++17 • Optimizer • VM • LSP • Package Manager</p> 
-     </div> 
-   </footer> 
-  
-   <!-- 🌓 THEME TOGGLE SCRIPT --> 
-   <script> 
-     (function() { 
-       const toggle = document.getElementById('themeToggle'); 
-       const icon = document.getElementById('themeIcon'); 
-       const html = document.documentElement; 
-  
-       // Check for saved preference or system preference 
-       const savedTheme = localStorage.getItem('vyronix-theme'); 
-       const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches; 
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VYRONIX — Systems Programming Language</title>
+
+  <style>
+    /* ===== CSS VARIABLES FOR THEMES ===== */
+    :root {
+      /* Light Theme (Default) */
+      --bg-primary: #ffffff;
+      --bg-secondary: #f9fafb;
+      --bg-card: #ffffff;
+      --bg-code: #f8fafc;
+      --bg-nav: #ffffffee;
+      --bg-footer: #f9fafb;
+      --text-primary: #1f2937;
+      --text-secondary: #6b7280;
+      --text-muted: #9ca3af;
+      --border-color: #e5e7eb;
+      --border-hover: #2563eb;
+      --accent-blue: #2563eb;
+      --accent-blue-hover: #1d4ed8;
+      --accent-green: #16a34a;
+      --accent-green-hover: #15803d;
+      --code-color: #7c3aed;
+      --card-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      --card-shadow-hover: 0 8px 25px rgba(37,99,235,0.15);
+      --badge-bg: #f3f4f6;
+      --badge-border: #d1d5db;
+      --badge-text: #374151;
+    }
+
+    [data-theme="dark"] {
+      /* Dark Theme */
+      --bg-primary: #0f1117;
+      --bg-secondary: #111827;
+      --bg-card: #161b22;
+      --bg-code: #161b22;
+      --bg-nav: #0f1117ee;
+      --bg-footer: #0f1117;
+      --text-primary: #e6edf3;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --border-color: #1f2937;
+      --border-hover: #58a6ff;
+      --accent-blue: #58a6ff;
+      --accent-blue-hover: #79c0ff;
+      --accent-green: #238636;
+      --accent-green-hover: #2ea043;
+      --code-color: #d2a8ff;
+      --card-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      --card-shadow-hover: 0 8px 25px rgba(88,166,255,0.2);
+      --badge-bg: #1f2937;
+      --badge-border: #374151;
+      --badge-text: #d1d5db;
+    }
+
+    /* ===== BASE STYLES ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    /* ===== NAVBAR ===== */
+    .nav {
+      position: sticky;
+      top: 0;
+      background: var(--bg-nav);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
+      z-index: 999;
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 0;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-primary);
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.25s ease;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--border-hover);
+      transform: scale(1.05);
+    }
+
+    /* ===== HERO SECTION ===== */
+    header {
+      padding: 80px 0;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+      background: linear-gradient(to bottom, var(--bg-secondary), var(--bg-primary));
+    }
+
+    header h1 {
+      font-size: 4rem;
+      margin-bottom: 10px;
+      color: var(--accent-blue);
+    }
+
+    header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .badges {
+      margin-top: 25px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .badge {
+      background: var(--badge-bg);
+      border: 1px solid var(--badge-border);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      color: var(--badge-text);
+    }
+
+    .buttons {
+      margin-top: 35px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-weight: bold;
+      transition: 0.25s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--accent-green);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-green-hover);
+    }
+
+    .btn-secondary {
+      background: var(--accent-blue);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent-blue-hover);
+    }
+
+    /* ===== SECTIONS ===== */
+    section {
+      padding: 70px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: var(--accent-blue);
+    }
+
+    .section-desc {
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 22px;
+      border-radius: 16px;
+      transition: 0.25s;
+      box-shadow: var(--card-shadow);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: var(--border-hover);
+      box-shadow: var(--card-shadow-hover);
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+
+    .card p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    pre {
+      background: var(--bg-code);
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      border-radius: 14px;
+      overflow-x: auto;
+      margin-top: 20px;
+    }
+
+    code {
+      font-family: Consolas, monospace;
+      color: var(--code-color);
+    }
+
+    .example {
+      margin-bottom: 50px;
+    }
+
+    .example h3 {
+      margin-bottom: 10px;
+      color: var(--accent-blue);
+    }
+
+    .example p {
+      color: var(--text-secondary);
+      margin-bottom: 15px;
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .step {
+      background: var(--bg-card);
+      border-left: 4px solid var(--accent-blue);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .faq {
+      margin-bottom: 25px;
+    }
+
+    .faq h3 {
+      color: var(--accent-blue);
+      margin-bottom: 10px;
+    }
+
+    .faq p {
+      color: var(--text-secondary);
+    }
+
+    footer {
+      padding: 40px 0;
+      text-align: center;
+      color: var(--text-muted);
+      background: var(--bg-footer);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2.8rem;
+      }
+
+      .nav-inner {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <div class="nav">
+    <div class="container nav-inner">
+      <h2>🚀 VYRONIX</h2>
+
+      <div style="display:flex;align-items:center;gap:15px;flex-wrap:wrap;">
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#quickstart">Quick Start</a>
+          <a href="#examples">Examples</a>
+          <a href="#faq">FAQ</a>
+          <a href="https://github.com/sahikxd/vyronix">GitHub</a>
+        </div>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span id="themeIcon">🌓</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <header>
+    <div class="container">
+      <h1>VYRONIX</h1>
+      <p>
+        A modern systems programming language built in C++17 —
+        fast, expressive, memory-safe, and designed for real-world development.
+      </p>
+
+      <div class="badges">
+        <span class="badge">⚡ Fast VM</span>
+        <span class="badge">🧠 Generics</span>
+        <span class="badge">🛡️ Memory Safety</span>
+        <span class="badge">📦 Package Manager</span>
+        <span class="badge">🔥 Closures</span>
+        <span class="badge">🧩 FFI</span>
+        <span class="badge">📜 Bytecode</span>
+      </div>
+
+      <div class="buttons">
+        <a class="btn btn-primary" href="https://github.com/sahikxd/vyronix/releases">⬇ Download</a>
+        <a class="btn btn-secondary" href="https://github.com/sahikxd/vyronix">⭐ GitHub</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="container">
+      <h2 class="section-title">✨ Features</h2>
+      <p class="section-desc">
+        Old-school performance. Modern developer experience.
+        No bloated nonsense. Just clean engineering.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <h3>⚡ High Performance</h3>
+          <p>Stack-based VM with optimized bytecode execution and peephole optimization.</p>
+        </div>
+        <div class="card">
+          <h3>🧠 Smart Type System</h3>
+          <p>Static typing, type inference, generics, and cleaner compile-time safety.</p>
+        </div>
+        <div class="card">
+          <h3>🛡️ Memory Safety</h3>
+          <p>RAII, weak pointers, and cycle detection for reliable low-level programming.</p>
+        </div>
+        <div class="card">
+          <h3>📦 Package Manager</h3>
+          <p>Install packages instantly using the built-in <code>vyx</code> ecosystem.</p>
+        </div>
+        <div class="card">
+          <h3>🧩 Native FFI</h3>
+          <p>Load DLLs and native libraries directly from VYRONIX code.</p>
+        </div>
+        <div class="card">
+          <h3>🛠️ Developer Tooling</h3>
+          <p>REPL, formatter, LSP support, and detailed compiler diagnostics.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK START -->
+  <section id="quickstart">
+    <div class="container">
+      <h2 class="section-title">🚀 Quick Start</h2>
+      <div class="steps">
+        <div class="step">
+          <h3>1. Install</h3>
+          <pre><code>Download binaries from GitHub Releases
+and add them to PATH.</code></pre>
+        </div>
+        <div class="step">
+          <h3>2. Create hello.vx</h3>
+          <pre><code>fn main() {
+    let name = "Developer";
+    io.print("Hello, " + name + "!");
+}
+main();</code></pre>
+        </div>
+        <div class="step">
+          <h3>3. Run</h3>
+          <pre><code>vyronix run hello.vx</code></pre>
+        </div>
+        <div class="step">
+          <h3>4. Compile Bytecode</h3>
+          <pre><code>vyronix build hello.vx -o hello.vyb
+vyronixvm hello.vyb</code></pre>
+        </div>
+        <div class="step">
+          <h3>5. Install Packages</h3>
+          <pre><code>vyx init
+vyx install http</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CODE EXAMPLES -->
+  <section id="examples">
+    <div class="container">
+      <h2 class="section-title">💻 Code Examples</h2>
+
+      <div class="example">
+        <h3>1. Fibonacci Sequence</h3>
+        <p>Recursive functions and basic math operations.</p>
+        <pre><code>fn fib(n: i64) -> i64 {
+    if (n <= 1) return n;
+    return fib(n - 1) + fib(n - 2);
+}
+io.print(fib(10));</code></pre>
+      </div>
+
+      <div class="example">
+        <h3>2. Closures & Higher-Order Functions</h3>
+        <p>Functions returning functions while capturing local state.</p>
+        <pre><code>fn multiplier(factor: i64) -> fn(i64) -> i64 {
+    return fn(n: i64) {
+        return n * factor;
+    };
+}
+let double = multiplier(2);
+io.print(double(5));</code></pre>
+      </div>
+
+      <div class="example">
+        <h3>3. Structs</h3>
+        <p>Custom data structures with fields.</p>
+        <pre><code>struct Point {
+    x: f64,
+    y: f64
+}
+let p = Point {
+    x: 10.5,
+    y: 20.0
+};
+io.print(p.x);</code></pre>
+      </div>
+
+      <div class="example">
+        <h3>4. Error Handling</h3>
+        <p>Simple try/catch support.</p>
+        <pre><code>try {
+    throw "Something went wrong!";
+} catch (e) {
+    io.print("Caught error: " + e);
+}</code></pre>
+      </div>
+
+      <div class="example">
+        <h3>5. Generics</h3>
+        <p>Reusable code for multiple data types.</p>
+        <pre><code>fn identity&lt;T&gt;(value: T) -> T {
+    return value;
+}
+let a = identity(42);
+let b = identity("Hello");</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="container">
+      <h2 class="section-title">📖 Wiki & FAQ</h2>
+      <div class="faq">
+        <h3>Why C++17?</h3>
+        <p>Because it gives raw performance with modern tooling. You get low-level control without writing prehistoric code like it's 2003.</p>
+      </div>
+      <div class="faq">
+        <h3>Compiled or Interpreted?</h3>
+        <p>Hybrid approach. VYRONIX compiles into <code>.vyb</code> bytecode, then executes through a custom stack VM.</p>
+      </div>
+      <div class="faq">
+        <h3>How does vyx work?</h3>
+        <p>The package manager uses GitHub repositories as a decentralized registry. Lightweight. Simple. No corporate monster infrastructure needed.</p>
+      </div>
+      <div class="faq">
+        <h3>Can VYRONIX use native libraries?</h3>
+        <p>Yes. Through experimental FFI support, you can call native DLLs and shared libraries.</p>
+      </div>
+      <div class="faq">
+        <h3>What is Peephole Optimization?</h3>
+        <p>The optimizer scans tiny instruction patterns and replaces wasteful operations with faster equivalents.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <h2>🚀 VYRONIX</h2>
+      <p style="margin-top:10px;">Built with ❤️ by @sahikxd — Bangladesh</p>
+      <p style="margin-top:10px;">MIT Licensed • C++17 • Optimizer • VM • LSP • Package Manager</p>
+    </div>
+  </footer>
+
+  <!-- 🌓 THEME TOGGLE SCRIPT -->
+  <script>
+    (function() {
+      const toggle = document.getElementById('themeToggle');
+      const icon = document.getElementById('themeIcon');
+      const html = document.documentElement;
+
+      // Check for saved preference or system preference
+      const savedTheme = localStorage.getItem('vyronix-theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+        html.setAttribute('data-theme', 'dark');
+        icon.textContent = '☀️';
+      } else {
+        html.setAttribute('data-theme', 'light');
+        icon.textContent = '🌙';
+      }
+
+      // Toggle handler
+      toggle.addEventListener('click', () => {
+        const current = html.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
         
-       if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) { 
-         html.setAttribute('data-theme', 'dark'); 
-         icon.textContent = '☀️'; 
-       } else { 
-         html.setAttribute('data-theme', 'light'); 
-         icon.textContent = '🌙'; 
-       } 
-  
-       // Toggle handler 
-       toggle.addEventListener('click', () => { 
-         const current = html.getAttribute('data-theme'); 
-         const next = current === 'dark' ? 'light' : 'dark'; 
-          
-         html.setAttribute('data-theme', next); 
-         localStorage.setItem('vyronix-theme', next); 
-         icon.textContent = next === 'dark' ? '☀️' : '🌙'; 
-       }); 
-  
-       // Optional: Listen for system theme changes 
-       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => { 
-         if (!localStorage.getItem('vyronix-theme')) { 
-           const newTheme = e.matches ? 'dark' : 'light'; 
-           html.setAttribute('data-theme', newTheme); 
-           icon.textContent = newTheme === 'dark' ? '☀️' : '🌙'; 
-         } 
-       }); 
-     })(); 
-   </script> 
-  
- </body> 
- </html> 
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('vyronix-theme', next);
+        icon.textContent = next === 'dark' ? '☀️' : '🌙';
+      });
+
+      // Optional: Listen for system theme changes
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (!localStorage.getItem('vyronix-theme')) {
+          const newTheme = e.matches ? 'dark' : 'light';
+          html.setAttribute('data-theme', newTheme);
+          icon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>
