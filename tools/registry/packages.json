@@ -3,14 +3,19 @@
   "maintainer": "sahikxd",
   "version": "1.0.0",
   "packages": {
+    "std": {
+      "name": "std",
+      "version": "1.0.0",
+      "description": "Standard Library for VYRONIX",
+      "repository": "https://github.com/sahikxd/vyronix-std",
+      "author": "sahikxd"
+    },
     "http": {
       "name": "http",
       "version": "1.0.0",
       "description": "HTTP client library for VYRONIX",
       "repository": "https://github.com/sahikxd/vyronix-http",
-      "author": "sahikxd",
-      "main": "http.vx",
-      "license": "MIT"
+      "author": "sahikxd"
     }
   }
 }

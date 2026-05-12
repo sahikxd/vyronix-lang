@@ -25,7 +25,7 @@ bool downloadFile(const std::string& url, const std::string& outPath) {
         return false;
     }
     // Check if file is empty or too small (404 pages saved as files)
-    if (fs::exists(outPath) && fs::file_size(outPath) < 500) {
+    if (!fs::exists(outPath) || fs::file_size(outPath) < 10) {
         return false;
     }
     return true;
@@ -68,11 +68,15 @@ std::string resolveAlias(const std::string& alias) {
     file.close();
     fs::remove(tempJson);
 
-    // Simple manual JSON parser for "alias": { "repo": "..." }
+    // Simple manual JSON parser for "alias": { "repository": "..." } or "repo": "..."
     size_t aliasPos = content.find("\"" + alias + "\"");
     if (aliasPos == std::string::npos) return "";
 
-    size_t repoKeyPos = content.find("\"repo\"", aliasPos);
+    size_t repoKeyPos = content.find("\"repository\"", aliasPos);
+    if (repoKeyPos == std::string::npos) {
+        repoKeyPos = content.find("\"repo\"", aliasPos);
+    }
+    
     if (repoKeyPos == std::string::npos) return "";
 
     size_t colonPos = content.find(":", repoKeyPos);
@@ -81,8 +85,10 @@ std::string resolveAlias(const std::string& alias) {
 
     if (startQuote != std::string::npos && endQuote != std::string::npos) {
         std::string repo = content.substr(startQuote + 1, endQuote - startQuote - 1);
-        // Remove "github.com/" prefix if present
-        if (repo.find("github.com/") == 0) {
+        // Remove "https://github.com/" or "github.com/" prefix if present
+        if (repo.find("https://github.com/") == 0) {
+            repo = repo.substr(19);
+        } else if (repo.find("github.com/") == 0) {
             repo = repo.substr(11);
         }
         return repo;
