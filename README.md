@@ -11,88 +11,140 @@ Ownership-aware · RAII · Weak Pointers · Stack-based VM · Peephole Optimizer
 [![Stars](https://img.shields.io/github/stars/sahikxd/vyronix-lang?color=00e5ff&style=flat-square)](https://github.com/sahikxd/vyronix-lang/stargazers)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-00e5ff?style=flat-square)]()
 
-[Quick Start](#-quick-start) · [Language Guide](#-features) · [VS Code Extension](#-vs-code-extension) · [Package Manager](#-package-manager-vyx)
+[Quick Start](#-quick-start) · [Language Guide](#-language-guide) · [Standard Library](#-standard-library) · [Package Manager](#-package-manager-vyx)
 
 </div>
 
 ---
 
-## What is VYRONIX?
+## 💡 What is VYRONIX?
 
-VYRONIX is a statically-typed, async-first programming language with a hand-written compiler pipeline — entirely built in C++17. It features a custom stack-based VM, type inference, closures, generics, and a built-in peephole optimizer for maximum performance.
+VYRONIX is a statically-typed, high-performance systems programming language. It is designed to be fast, memory-safe, and easy to use. Every part of the toolchain — from the lexer to the custom virtual machine — is hand-written in C++17.
 
-```vyronix
-// Hello World
-fn main() {
-    let name = "VYRONIX";
-    io.print("Hello, " + name + "!");
-}
-
-main();
-
-// Closures + Generics
-fn makeCounter<T>(start: T) -> fn() -> T {
-    let count = start;
-    return fn() { 
-        count = count + 1; 
-        return count; 
-    };
-}
-```
+### Why VYRONIX?
+- **Speed**: Built-in peephole optimizer for efficient bytecode.
+- **Safety**: RAII and `weak<T>` pointers prevent memory leaks and cycles.
+- **Simplicity**: Clean C-style syntax with powerful type inference.
+- **Ecosystem**: A built-in, zero-cost package manager (`vyx`).
 
 ---
 
-## ✨ Features
+## 📖 Language Guide & Examples
 
-- ✅ **Type Inference + Static Typing**: Strong safety with a modern feel.
-- ✅ **Closures, Generics, Try/Catch**: Advanced language features for robust apps.
-- ✅ **Namespaced Stdlib**: Organized as `io.`, `fs.`, `math.`, `str.`, `arr.`, `sys.`.
-- ✅ **Peephole Optimizer**: 2-4x performance boost via constant folding and redundant code removal.
-- ✅ **Memory Safety**: RAII with explicit reference cycle breaking using `weak<T>`.
-- ✅ **Custom Bytecode (.vyb)**: Efficient serialization with `VYXB` format.
-- ✅ **VS Code Extension**: Full syntax highlighting, diagnostics, and go-to-definition.
-- ✅ **🆕 Package Manager (vyx)**: Zero-cost, GitHub-based decentralized ecosystem!
+### 1. Variables & Types
+VYRONIX uses `let` for mutable variables and `const` for immutable ones. Types can be explicitly stated or inferred.
+
+```vyronix
+let x = 10;                // Inferred as i64
+const pi: f64 = 3.14159;   // Explicit type
+let name = "VYRONIX";      // String
+```
+
+### 2. Functions & Closures
+Functions are first-class citizens. You can pass them around, return them, and capture variables from the surrounding scope.
+
+```vyronix
+// Standard function
+fn add(a: i64, b: i64) -> i64 {
+    return a + b;
+}
+
+// Higher-order function with closure
+fn multiplier(factor: i64) -> fn(i64) -> i64 {
+    return fn(n: i64) { 
+        return n * factor; 
+    };
+}
+
+let double = multiplier(2);
+io.print(double(5)); // Output: 10
+```
+
+### 3. Data Structures (Structs & Arrays)
+Define custom data models and manage collections easily.
+
+```vyronix
+struct Player {
+    name: str,
+    score: i64
+}
+
+let p1 = Player { name: "Sahik", score: 100 };
+let scores = [10, 20, 30]; // Array literal
+
+io.print(p1.name + " scored " + str.from(p1.score));
+```
+
+### 4. Generics
+Write reusable code that works with any data type.
+
+```vyronix
+fn swap<T>(pair: (T, T)) -> (T, T) {
+    return (pair.1, pair.0);
+}
+
+let swapped = swap<i64>((1, 2)); // Returns (2, 1)
+```
+
+### 5. Error Handling
+Robust error management using `try-catch` blocks.
+
+```vyronix
+try {
+    if (1 > 0) {
+        throw "System error occurred!";
+    }
+} catch (err) {
+    io.print("Caught: " + err);
+}
+```
 
 ---
 
 ## 🚀 Quick Start
 
-### Installation
-Download the latest binaries from [Releases](https://github.com/sahikxd/vyronix-lang/releases).
+### 1. Installation
+Download the latest binaries for your OS from the [Releases](https://github.com/sahikxd/vyronix-lang/releases) page.
 
-### Run a file
+### 2. Running Code
+Create a file `hello.vx`:
+```vyronix
+fn main() {
+    io.print("Hello, VYRONIX!");
+}
+main();
+```
+Run it instantly:
 ```bash
-vyronix run examples/hello.vx
+vyronix run hello.vx
 ```
 
-### Build to bytecode
+### 3. Building & Disassembling
+Compile to optimized binary format:
 ```bash
-vyronix build examples/hello.vx -o hello.vyb
-vyronixvm hello.vyb
-```
-
-### Install a package
-```bash
-vyx install http  # Installs from github.com/sahikxd/http-vx
+vyronix build hello.vx -o hello.vyb
+vyronix disasm hello.vyb  # Peek at the optimized bytecode!
 ```
 
 ---
 
 ## 📦 Package Manager (vyx)
 
-VYRONIX features a decentralized package manager that uses GitHub as a registry.
-- **Registry**: [https://sahikxd.github.io/registry/packages.json](https://sahikxd.github.io/registry/packages.json)
-- **Config**: `vxproj.toml`
-- **Modules**: `vx_modules/`
+`vyx` allows you to install libraries directly from GitHub.
+
+```bash
+vyx init             # Initialize vxproj.toml
+vyx install http      # Install http-vx from registry
+```
 
 ---
 
-## 🛠 Tooling
-
-- `vyronix repl` — Interactive shell with multiline support.
-- `vyronix vxfmt` — Automated code formatter.
-- `vyronix disasm` — Bytecode disassembler for debugging.
-- `--debug` flag — Full pipeline tracing per stage.
+## 🛠 Standard Library (Namespaced)
+- `io`: `print`, `input`
+- `math`: `sqrt`, `pow`, `sin`, `cos`
+- `str`: `len`, `split`, `upper`, `lower`
+- `fs`: `read`, `write`, `exists`
+- `arr`: `push`, `pop`, `sort`
 
 ---
 
