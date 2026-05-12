@@ -18,14 +18,39 @@ void printUsage() {
 }
 
 bool downloadFile(const std::string& url, const std::string& outPath) {
-    std::string cmd = "curl -L -s -o \"" + outPath + "\" \"" + url + "\"";
-    return std::system(cmd.c_str()) == 0;
+    // -f flag tells curl to fail silently on server errors (like 404)
+    std::string cmd = "curl -L -f -s -o \"" + outPath + "\" \"" + url + "\"";
+    int result = std::system(cmd.c_str());
+    if (result != 0) {
+        return false;
+    }
+    // Check if file is empty or too small (404 pages saved as files)
+    if (fs::exists(outPath) && fs::file_size(outPath) < 500) {
+        return false;
+    }
+    return true;
 }
 
 bool extractZip(const std::string& zipPath, const std::string& outDir) {
     fs::create_directories(outDir);
-    std::string cmd = "tar -xf \"" + zipPath + "\" -C \"" + outDir + "\" --strip-components=1";
-    return std::system(cmd.c_str()) == 0;
+    // Use powershell's Expand-Archive for better ZIP handling on Windows
+    std::string cmd = "powershell -Command \"Expand-Archive -Path '" + zipPath + "' -DestinationPath '" + outDir + "' -Force\"";
+    int result = std::system(cmd.c_str());
+    if (result != 0) return false;
+
+    // Move files from subfolder if necessary (GitHub zips contain a root folder)
+    for (const auto& entry : fs::directory_iterator(outDir)) {
+        if (entry.is_directory()) {
+            std::string subDir = entry.path().string();
+            // Move contents of subDir to outDir
+            for (const auto& subEntry : fs::directory_iterator(subDir)) {
+                fs::rename(subEntry.path(), fs::path(outDir) / subEntry.path().filename());
+            }
+            fs::remove_all(subDir);
+            break;
+        }
+    }
+    return true;
 }
 
 void installPackage(const std::string& pkg) {
