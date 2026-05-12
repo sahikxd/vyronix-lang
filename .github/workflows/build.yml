@@ -17,17 +17,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up C++ (Linux)
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential
-
-    - name: Set up C++ (macOS)
-      if: matrix.os == 'macos-latest'
-      run: |
-        brew install make
-
     - name: Build (Windows)
       if: matrix.os == 'windows-latest'
       run: |
@@ -50,21 +39,15 @@ jobs:
         ./vyronixc examples/hello.vx
         ./vyronixvm out.vyb
 
-    - name: Prepare Artifacts (Windows)
-      if: matrix.os == 'windows-latest'
+    - name: Prepare Artifacts
       run: |
-        mkdir dist
-        copy vyronix.exe dist\
-        copy vyronixc.exe dist\
-        copy vyronixvm.exe dist\
-        copy vyx.exe dist\
-        copy vyronix-runtime.a dist\
-
-    - name: Prepare Artifacts (Linux/macOS)
-      if: matrix.os != 'windows-latest'
-      run: |
-        mkdir dist
-        cp vyronix vyronixc vyronixvm vyx vyronix-runtime.a dist/
+        mkdir -p dist
+        if [ "${{ matrix.os }}" = "windows-latest" ]; then
+          cp vyronix.exe vyronixc.exe vyronixvm.exe vyx.exe vyronix-runtime.a dist/ || true
+        else
+          cp vyronix vyronixc vyronixvm vyx vyronix-runtime.a dist/ || true
+        fi
+      shell: bash
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
